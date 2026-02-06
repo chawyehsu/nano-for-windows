@@ -1,0 +1,43 @@
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+compile_commands.json
+events.json
+.cache
+*.log
+*.exe
+# rejected patch hunks
+*.rej
+
+# nano .gitignore
+*~
+*.bak
+*.o
+*.orig
+*.swp
+.deps
+.libs
+Makefile
+
+core
+.gdb_history
+.gdbinit
+
+/src/nano
+/src/revision.h
+
+/ar-lib
+/autom4te.cache
+/config.cache
+/config.h
+/config.log
+/config.status
+/intl
+/mkinstalldirs
+/stamp-h1
+
+# Gnulib stuff:
+/gnulib/
+/m4/.gitignore
+/snippet/
