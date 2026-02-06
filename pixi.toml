@@ -1,0 +1,32 @@
+[workspace]
+name = "nano-for-windows"
+description = "GNU nano for Windows"
+authors = ["Chawye Hsu <su+git@chawyehsu.com>"]
+license = "GPL-3.0-or-later"
+channels = ["chawyehsu", "conda-forge"]
+platforms = ["win-64"]
+
+[tasks]
+clean = { cmd = "make clean", description = "Clean the build artifacts" }
+configure = { cmd = "bash ./scripts/configure.sh", description = "Configure the build system" }
+build = { cmd = "bear -- make -j$(nproc)", description = "Build the project", depends-on = ["configure"] }
+rebuild = { cmd = "pwsh -nop ./scripts/patch-compile-commands.ps1", description = "Rebuild the project with patched compile_commands.json", depends-on = ["clean", "build"] }
+setup = { cmd = "pwsh -nop ./scripts/setup.ps1", description = "Set up the working copy" }
+
+[dependencies]
+gcc = ">=15.2.0,<15.3"
+make = ">=4.4.1,<5"
+pkg-config = ">=0.29.2,<0.30"
+
+[target.win-64.dependencies]
+bear = ">=4.0.3,<5"
+"m2-automake1.16" = ">=1.16.5.1,<2"
+m2-autoconf = ">=2.71.3,<3"
+m2-bash = ">=5.2.37.2,<6"
+m2-coreutils = ">=8.32.5,<9"
+m2-gawk = ">=5.3.2.1,<6"
+m2-grep = ">=1!3.0.7,<1!4"
+m2-patch = ">=2.7.6.3,<3"
+m2-sed = ">=4.9.1,<5"
+m2-texinfo = ">=7.2.1,<8"
+mingw-w64-pdcursesmod-static = ">=4.5.4,<5"
