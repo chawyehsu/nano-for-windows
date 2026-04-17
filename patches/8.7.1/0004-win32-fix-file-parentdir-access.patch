@@ -1,0 +1,26 @@
+From f4aaeb3c6abff46256696ca02953c81fcb7b3fb9 Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:40:09 +0800
+Subject: [PATCH 04/16] win32: fix file parentdir access
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/files.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/files.c b/src/files.c
+index d8b5f42..dd1b7ce 100644
+--- a/src/files.c
++++ b/src/files.c
+@@ -369,7 +369,7 @@ bool has_valid_path(const char *filename)
+ 			statusline(ALERT, _("Path '%s': %s"), parentdir, strerror(errno));
+ 	} else if (!S_ISDIR(parentinfo.st_mode))
+ 		statusline(ALERT, _("Path '%s' is not a directory"), parentdir);
+-	else if (access(parentdir, X_OK) == -1)
++	else if (access(parentdir, R_OK) == -1)
+ 		statusline(ALERT, _("Path '%s' is not accessible"), parentdir);
+ #ifndef NANO_TINY
+ 	else if (ISSET(LOCKING) && !ISSET(VIEW_MODE) && access(parentdir, W_OK) < 0)
+-- 
+2.53.0.windows.3
+

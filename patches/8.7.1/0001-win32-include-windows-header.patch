@@ -1,0 +1,27 @@
+From daafeffc8fffcdcbbbb9283aa3596c53a23d1add Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:32:39 +0800
+Subject: [PATCH 01/16] win32: include windows header
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/definitions.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/definitions.h b/src/definitions.h
+index 8c54ca8..b5cf6b8 100644
+--- a/src/definitions.h
++++ b/src/definitions.h
+@@ -662,3 +662,8 @@ typedef struct completionstruct {
+ 	struct completionstruct *next;
+ } completionstruct;
+ #endif
++
++#ifdef _WIN32
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#endif
+\ No newline at end of file
+-- 
+2.53.0.windows.3
+

@@ -1,0 +1,29 @@
+From ac9098d887e23c7c2929cad8b133f4ec75692ddc Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:41:51 +0800
+Subject: [PATCH 07/16] win32: file io to binary mode
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/nano.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/nano.c b/src/nano.c
+index 4a495f7..db54275 100644
+--- a/src/nano.c
++++ b/src/nano.c
+@@ -1834,6 +1834,11 @@ int main(int argc, char **argv)
+ 		{NULL, 0, NULL, 0}
+ 	};
+ 
++	/* Default file i/o operation to binary mode as linux does.
++	 *  https://learn.microsoft.com/en-us/cpp/c-runtime-library/text-and-binary-mode-file-i-o
++	 */
++	_set_fmode(_O_BINARY);
++
+ #ifdef __linux__
+ 	struct vt_stat dummy;
+ 
+-- 
+2.53.0.windows.3
+

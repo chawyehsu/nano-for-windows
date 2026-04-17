@@ -1,0 +1,51 @@
+From 6f3873eca6cc790e6e7aae5bd8bd06562bad072a Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:43:16 +0800
+Subject: [PATCH 09/16] win32: windows conhost read stdin data
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/nano.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/src/nano.c b/src/nano.c
+index 16165e0..17aacb1 100644
+--- a/src/nano.c
++++ b/src/nano.c
+@@ -844,7 +844,7 @@ void restore_handler_for_Ctrl_C(void)
+ /* Reconnect standard input to the tty, and store its state. */
+ void reconnect_and_store_state(void)
+ {
+-	int thetty = open("/dev/tty", O_RDONLY);
++	int thetty = open("CONIN$", O_RDONLY);
+ 
+ 	if (thetty < 0 || dup2(thetty, STDIN_FILENO) < 0)
+ 		die(_("Could not reconnect stdin to keyboard\n"));
+@@ -860,18 +860,22 @@ void reconnect_and_store_state(void)
+ bool scoop_stdin(void)
+ {
+ 	FILE *stream;
++	int fd;
+ 
+ 	restore_terminal();
+ 
+ 	/* When input comes from a terminal, show a helpful message. */
+ 	if (isatty(STDIN_FILENO))
+ 		fprintf(stderr, _("Reading data from keyboard; "
+-							"type ^D or ^D^D to finish.\n"));
++							"type a ^Z line to finish.\n"));
+ 
+ 	/* Open standard input. */
+-	stream = fopen("/dev/stdin", "rb");
++	fd = dup(0);
++	stream = fdopen(fd, "rb");
+ 	if (stream == NULL) {
+ 		int errnumber = errno;
++		if(fd != -1)
++			close(fd);
+ 
+ 		terminal_init();
+ 		doupdate();
+-- 
+2.53.0.windows.3
+

@@ -1,0 +1,38 @@
+From 3e71d6d7d637f179ba36b470c6273ccc49b83682 Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:38:59 +0800
+Subject: [PATCH 03/16] win32: system-wide rcfile compat
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/rcfile.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/src/rcfile.c b/src/rcfile.c
+index ccf92a6..17a0121 100644
+--- a/src/rcfile.c
++++ b/src/rcfile.c
+@@ -1732,8 +1732,18 @@ void do_rcfiles(void)
+ 		nanorc = get_full_path(custom_nanorc);
+ 		if (nanorc == NULL || access(nanorc, F_OK) != 0)
+ 			die(_("Specified rcfile does not exist\n"));
+-	} else
+-		nanorc = mallocstrcpy(nanorc, SYSCONFDIR "/nanorc");
++	} else {
++		/* For the system-wide nanorc file, use SYSCONFDIR if defined
++		 * at compile time; otherwise, use %ALLUSERSPROFILE%\nanorc. */
++		if (SYSCONFDIR[0] != '\0') {
++			nanorc = mallocstrcpy(nanorc, SYSCONFDIR "/nanorc");
++		} else {
++			const char *programdata = getenv("ALLUSERSPROFILE");
++			if (programdata == NULL || programdata[0] == '\0')
++				programdata = "C:/ProgramData";
++			nanorc = concatenate(programdata, "/nanorc");
++		}
++	}
+ 
+ 	if (is_good_file(nanorc))
+ 		parse_one_nanorc();
+-- 
+2.53.0.windows.3
+
