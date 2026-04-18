@@ -70,7 +70,7 @@ try {
 
 if (Test-Path "$CACHE_DIR/$fileName") {
     if ($env:CI) {
-        gh release create "v$($CondaVersion)" "$CACHE_DIR/$fileName"
+        gh release create "v$($CondaVersion)" "$CACHE_DIR/$fileName" --latest --title "v$($CondaVersion)" --notes "GNU nano v$($CondaVersion) for Windows"
     }
     Write-Host "Release v$CondaVersion created successfully." -ForegroundColor Green
 }
