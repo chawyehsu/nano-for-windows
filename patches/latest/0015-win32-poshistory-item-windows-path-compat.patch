@@ -1,0 +1,42 @@
+From 04985681f50b8ecd9818a6a1bb5be07ef8f8d388 Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Sat, 18 Apr 2026 14:47:12 +0800
+Subject: [PATCH 15/16] win32: poshistory item windows path compat
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/history.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/src/history.c b/src/history.c
+index cf5451d..5034cb9 100644
+--- a/src/history.c
++++ b/src/history.c
+@@ -23,6 +23,7 @@
+ 
+ #ifdef ENABLE_HISTORIES
+ 
++#include <ctype.h>
+ #include <errno.h>
+ #include <string.h>
+ 
+@@ -414,6 +415,16 @@ void load_positions_register(void)
+ 	while (count++ < 200 && (length = getline(&phrase, &dummy, registry)) > 1) {
+ 		normalize_slashes(phrase);
+ 		stanza = strchr(phrase, '/');
++
++#ifdef _WIN32
++		/* Keep Windows drive letters by rewinding to the drive prefix
++		 * when the first slash is part of X:/
++		 */
++		if (stanza != NULL && stanza - phrase >= 2 && stanza[-1] == ':' &&
++				isalpha((unsigned char)stanza[-2]))
++			stanza -= 2;
++#endif
++
+ 		length -= (stanza ? stanza - phrase : 0);
+ 
+ 		/* Decode NULs as embedded newlines. */
+-- 
+2.53.0.windows.3
+

@@ -1,0 +1,60 @@
+From 59b545fe8d792e476acd340dbf974533cbe5e39e Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:41:05 +0800
+Subject: [PATCH 06/16] win32: homedir tempdir compat
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/files.c |  4 ++--
+ src/utils.c | 12 ++++--------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/src/files.c b/src/files.c
+index 36f8c3a..e541757 100644
+--- a/src/files.c
++++ b/src/files.c
+@@ -1462,7 +1462,7 @@ char *check_writable_directory(const char *path)
+  * file stream opened in read-write mode.  On error, return NULL. */
+ char *safe_tempfile(FILE **stream)
+ {
+-	const char *env_dir = getenv("TMPDIR");
++	const char *env_dir = getenv("TEMP");
+ 	char *tempdir = NULL, *tempfile_name = NULL;
+ 	char *extension;
+ 	int descriptor;
+@@ -1476,7 +1476,7 @@ char *safe_tempfile(FILE **stream)
+ 		tempdir = check_writable_directory(P_tmpdir);
+ 
+ 	if (tempdir == NULL)
+-		tempdir = copy_of("/tmp/");
++		tempdir = copy_of("~/AppData/Local/Temp/");
+ 
+ 	extension = strrchr(openfile->filename, '.');
+ 	normalize_slashes(extension);
+diff --git a/src/utils.c b/src/utils.c
+index 84df35c..ad14c79 100644
+--- a/src/utils.c
++++ b/src/utils.c
+@@ -35,15 +35,11 @@ void get_homedir(void)
+ 	if (homedir == NULL) {
+ 		const char *homenv = getenv("HOME");
+ 
+-#ifdef HAVE_PWD_H
+-		/* When $HOME is unset, or when we're root, try the database. */
+-		if (homenv == NULL || geteuid() == ROOT_UID) {
+-			const struct passwd *userage = getpwuid(geteuid());
++		if (homenv == NULL || *homenv == '\0')
++			homenv = getenv("USERPROFILE");
+ 
+-			if (userage != NULL)
+-				homenv = userage->pw_dir;
+-		}
+-#endif
++		if (homenv == NULL || *homenv == '\0')
++			homenv = getenv("ALLUSERSPROFILE");
+ 
+ 		/* Only set `homedir` if a home directory could be determined. */
+ 		if (homenv != NULL && *homenv != '\0')
+-- 
+2.53.0.windows.3
+

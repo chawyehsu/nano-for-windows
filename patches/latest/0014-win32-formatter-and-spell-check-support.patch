@@ -1,0 +1,204 @@
+From 9f25b214c10fad24b2cf5776eb1fbc713dd0e71c Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 03:48:29 +0800
+Subject: [PATCH 14/16] win32: formatter and spell check support
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/text.c | 173 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 171 insertions(+), 2 deletions(-)
+
+diff --git a/src/text.c b/src/text.c
+index b8899da..e4bff6b 100644
+--- a/src/text.c
++++ b/src/text.c
+@@ -2237,6 +2237,172 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
+ 		statusline(REMARK, _("Finished checking spelling"));
+ 	else
+ 		statusline(REMARK, _("Buffer has been processed"));
++
++#elif defined(_WIN32)
++	ssize_t was_lineno = openfile->current->lineno;
++	size_t was_pww = openfile->placewewant;
++	size_t was_x = openfile->current_x;
++	bool was_at_eol = (openfile->current->data[openfile->current_x] == '\0');
++	FILETIME timestamp;
++	bool have_timestamp = FALSE;
++	static char **arguments = NULL;
++	PROCESS_INFORMATION pi;
++	STARTUPINFO si;
++	DWORD exit_code;
++	char *command_line = NULL;
++	size_t cmd_len = 0;
++	bool replaced = FALSE;
++
++	/* Get file attributes up front.  If the size is zero, there is nothing
++	 * to do; otherwise, remember the time of modification. */
++	{
++		WIN32_FILE_ATTRIBUTE_DATA attrs;
++
++		if (GetFileAttributesEx(tempfile_name, GetFileExInfoStandard, &attrs)) {
++			if (attrs.nFileSizeHigh == 0 && attrs.nFileSizeLow == 0) {
++#ifndef NANO_TINY
++				if (spelling && openfile->mark)
++					statusline(AHEM, _("Selection is empty"));
++				else
++#endif
++					statusline(AHEM, _("Buffer is empty"));
++				return;
++			}
++
++			timestamp = attrs.ftLastWriteTime;
++			have_timestamp = TRUE;
++		}
++	}
++
++	/* The spell checker needs the screen, so exit from curses mode. */
++	if (spelling)
++		endwin();
++	else
++		statusbar(_("Invoking formatter..."));
++
++	construct_argument_list(&arguments, theprogram, tempfile_name);
++
++	/* Build command line string from arguments array. */
++	for (int i = 0; arguments[i] != NULL; i++) {
++		/* Account for the argument length plus a space. */
++		cmd_len += strlen(arguments[i]) + 1;
++	}
++
++	command_line = nmalloc(cmd_len + 1);
++	command_line[0] = '\0';
++
++	for (int i = 0; arguments[i] != NULL; i++) {
++		if (i > 0)
++			strcat(command_line, " ");
++		strcat(command_line, arguments[i]);
++	}
++
++	/* Initialize structures for CreateProcess. */
++	ZeroMemory(&si, sizeof(si));
++	si.cb = sizeof(si);
++	ZeroMemory(&pi, sizeof(pi));
++
++	/* Create and execute the process. */
++	if (CreateProcess(NULL, command_line, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
++		/* Wait for the process to complete. */
++		WaitForSingleObject(pi.hProcess, INFINITE);
++
++		/* Get the exit code. */
++		if (!GetExitCodeProcess(pi.hProcess, &exit_code)) {
++			exit_code = 1;
++		}
++
++		/* Close process and thread handles. */
++		CloseHandle(pi.hProcess);
++		CloseHandle(pi.hThread);
++	} else {
++		exit_code = 9;  /* Simulate the fork/exec error behavior. */
++	}
++
++	/* After spell checking, restore terminal state and reenter curses mode;
++	 * after formatting, make sure that any formatter output is wiped. */
++	if (spelling) {
++		terminal_init();
++		doupdate();
++#ifndef NANO_TINY
++		if (the_window_resized)
++			regenerate_screen();
++#endif
++	} else
++		full_refresh();
++
++	if (exit_code == 9) {
++		statusline(ALERT, _("Could not execute '%s'"), arguments[0]);
++		free(arguments[0]);
++		free(command_line);
++		return;
++	} else if (exit_code > 2) {
++		statusline(ALERT, _("Error invoking '%s'"), arguments[0]);
++		free(arguments[0]);
++		free(command_line);
++		return;
++	} else if (exit_code != 0)
++		statusline(ALERT, _("Program '%s' complained"), arguments[0]);
++
++	free(arguments[0]);
++	free(command_line);
++
++	/* When the temporary file wasn't touched, say so and leave. */
++	if (have_timestamp) {
++		WIN32_FILE_ATTRIBUTE_DATA attrs;
++
++		if (GetFileAttributesEx(tempfile_name, GetFileExInfoStandard, &attrs) &&
++				CompareFileTime(&attrs.ftLastWriteTime, &timestamp) == 0) {
++			statusline(REMARK, _("Nothing changed"));
++			return;
++		}
++	}
++
++#ifndef NANO_TINY
++	/* Replace the marked text (or entire text) with the corrected text. */
++	if (spelling && openfile->mark) {
++		ssize_t was_mark_lineno = openfile->mark->lineno;
++		bool upright = mark_is_before_cursor();
++
++		replaced = replace_buffer(tempfile_name, CUT, "spelling correction");
++
++		/* Adjust the end point of the marked region for any change in
++		 * length of the region's last line. */
++		if (upright)
++			was_x = openfile->current_x;
++		else
++			openfile->mark_x = openfile->current_x;
++
++		/* Restore the mark. */
++		openfile->mark = line_from_number(was_mark_lineno);
++	} else
++#endif
++		replaced = replace_buffer(tempfile_name, CUT_TO_EOF,
++					/* TRANSLATORS: The next two go with Undid/Redid messages. */
++					(spelling ? N_("spelling correction") : N_("formatting")));
++
++	/* Go back to the old position. */
++	goto_line_posx(was_lineno, was_x);
++	if (was_at_eol || openfile->current_x > strlen(openfile->current->data))
++		openfile->current_x = strlen(openfile->current->data);
++
++	if (replaced) {
++#ifndef NANO_TINY
++		openfile->filetop->has_anchor = FALSE;
++		update_undo(COUPLE_END);
++#endif
++	}
++
++	openfile->placewewant = was_pww;
++	adjust_viewport(STATIONARY);
++
++	if (spelling)
++		statusline(REMARK, _("Finished checking spelling"));
++	else
++		statusline(REMARK, _("Buffer has been processed"));
++
++#else
++#error "Platform not supported for spell checking/formatting"
+ #endif
+ }
+ #endif /* ENABLE_SPELLER || ENABLE_FORMATTER */
+@@ -2572,8 +2738,11 @@ void do_spell(void)
+ 
+ 	if (alt_speller && *alt_speller)
+ 		treat(temp_name, alt_speller, TRUE);
+-	else
+-		do_int_speller(temp_name);
++	else {
++		// do_int_speller(temp_name);
++		statusline(ALERT, _("Internal spell checker is not supported in this build"));
++		return;
++	}
+ 
+ 	unlink(temp_name);
+ 	free(temp_name);
+-- 
+2.53.0.windows.3
+

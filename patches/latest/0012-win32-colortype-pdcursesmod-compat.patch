@@ -1,0 +1,90 @@
+From 23bbe97097001e377c956de04e7c427940b2431f Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:44:02 +0800
+Subject: [PATCH 12/16] win32: colortype pdcursesmod compat
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/definitions.h |  2 +-
+ src/global.c      |  2 +-
+ src/prototypes.h  |  2 +-
+ src/rcfile.c      | 10 +++++++---
+ 4 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/src/definitions.h b/src/definitions.h
+index 18cd28e..498842a 100644
+--- a/src/definitions.h
++++ b/src/definitions.h
+@@ -388,7 +388,7 @@ typedef struct colortype {
+ 		/* This combo's background color. */
+ 	short pairnum;
+ 		/* The pair number for this foreground/background color combination. */
+-	int attributes;
++	chtype attributes;
+ 		/* Pair number and brightness composed into ready-to-use attributes. */
+ 	regex_t *start;
+ 		/* The compiled regular expression for 'start=', or the only one. */
+diff --git a/src/global.c b/src/global.c
+index 8a6b985..addf48a 100644
+--- a/src/global.c
++++ b/src/global.c
+@@ -269,7 +269,7 @@ int hilite_attribute = A_REVERSE;
+ colortype* color_combo[NUMBER_OF_ELEMENTS] = {NULL};
+ 		/* The color combinations for interface elements given in the rcfile. */
+ #endif
+-int interface_color_pair[NUMBER_OF_ELEMENTS] = {0};
++chtype interface_color_pair[NUMBER_OF_ELEMENTS] = {0};
+ 		/* The processed color pairs for the interface elements. */
+ 
+ char *homedir = NULL;
+diff --git a/src/prototypes.h b/src/prototypes.h
+index 8553779..5677796 100644
+--- a/src/prototypes.h
++++ b/src/prototypes.h
+@@ -181,7 +181,7 @@ extern int hilite_attribute;
+ #ifdef ENABLE_COLOR
+ extern colortype *color_combo[NUMBER_OF_ELEMENTS];
+ #endif
+-extern int interface_color_pair[NUMBER_OF_ELEMENTS];
++extern chtype interface_color_pair[NUMBER_OF_ELEMENTS];
+ 
+ extern char *homedir;
+ extern char *statedir;
+diff --git a/src/rcfile.c b/src/rcfile.c
+index 2531959..23055b9 100644
+--- a/src/rcfile.c
++++ b/src/rcfile.c
+@@ -1022,7 +1022,11 @@ short closest_index_color(short red, short green, short blue)
+ 	/* Translation table, from 14 intended gray levels to 24 available levels. */
+ 	static const short gray[] = { 1, 2, 3, 4, 5, 6, 7, 9, 11, 13, 15, 18, 21, 23 };
+ 
+-	if (COLORS != 256)
++	/* PDCursesMod maximum possible COLORS is 768, see:
++	 *  curspriv.h - PDC_MAXCOL
++	 *  https://github.com/Bill-Gray/PDCursesMod/blob/master/docs/HISTORY.md#pdcurses-39---2019-09-04
++	 */
++	if (COLORS < 256)
+ 		return THE_DEFAULT;
+ 	else if (red == green && green == blue && 0 < red && red < 0xF)
+ 		return 232 + gray[red - 1];
+@@ -1100,7 +1104,7 @@ short color_to_short(const char *colorname, bool *vivid, bool *thick)
+ 
+ /* Parse the color name (or pair of color names) in the given string.
+  * Return FALSE when any color name is invalid; otherwise return TRUE. */
+-bool parse_combination(char *combotext, short *fg, short *bg, int *attributes)
++bool parse_combination(char *combotext, short *fg, short *bg, chtype *attributes)
+ {
+ 	bool vivid, thick;
+ 	char *comma;
+@@ -1162,7 +1166,7 @@ void parse_rule(char *ptr, int rex_flags)
+ {
+ 	char *names, *regexstring;
+ 	short fg, bg;
+-	int attributes;
++	chtype attributes;
+ 
+ 	if (*ptr == '\0') {
+ 		jot_error(N_("Missing color name"));
+-- 
+2.53.0.windows.3
+
