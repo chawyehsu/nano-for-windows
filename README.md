@@ -2,7 +2,7 @@
 
 > Windows port of the [GNU nano text editor], made with the conda-forge ecosystem
 
-[![Downloads](https://img.shields.io/conda/dn/chawyehsu/nano.svg)](https://anaconda.org/chawyehsu/nano) [![Version](https://img.shields.io/conda/vn/chawyehsu/nano.svg)](https://anaconda.org/chawyehsu/nano)
+[![Release](https://github.com/chawyehsu/nano-for-windows/actions/workflows/release.yml/badge.svg)](https://github.com/chawyehsu/nano-for-windows/actions/workflows/release.yml) [![Downloads](https://img.shields.io/conda/dn/chawyehsu/nano.svg)](https://anaconda.org/chawyehsu/nano) [![Version](https://img.shields.io/conda/vn/chawyehsu/nano.svg)](https://anaconda.org/chawyehsu/nano) [![GitHub Release](https://img.shields.io/github/v/release/chawyehsu/nano-for-windows.svg)](https://github.com/chawyehsu/nano-for-windows/releases)
 
 ## Getting Started
 
@@ -64,6 +64,12 @@ However, existing ports are either no longer maintained or rarely updated, or
 they contain problems that the porters were unwilling to address. Therefore, I
 decided to port and maintain my own edition.
 
+### Build Pipeline
+
+The pre-built artifacts provided in this repository are built with the conda-forge
+ecosystem, and then reuploaded to GitHub Releases. The recipe is available on the
+repo [chawyehsu/conda-recipes], build logs are also available there.
+
 ### Prior work
 
 - [Official build for Windows]
@@ -80,6 +86,7 @@ decided to port and maintain my own edition.
 [GitHub Releases]: https://github.com/chawyehsu/nano-for-windows/releases
 [pixi]: https://pixi.sh
 [Jujutsu]: https://www.jj-vcs.dev/
+[chawyehsu/conda-recipes]: https://github.com/chawyehsu/conda-recipes/tree/main/nano
 [Official build for Windows]: https://www.nano-editor.org/dist/win32-support/
 [lhmouse/nano-win]: https://github.com/lhmouse/nano-win
 [okibcn/nano-for-windows]: https://github.com/okibcn/nano-for-windows
