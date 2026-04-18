@@ -37,6 +37,9 @@ channel. You can install it with [pixi] or conda/mamba.
 pixi global install nano -c chawyehsu
 ```
 
+Or you may download the pre-built artifact from [GitHub Releases], extract the
+files to a directory and add the `bin` directory to your `PATH` environment variable.
+
 Then run `nano --version` to verify the installation.
 
 ## Development
@@ -74,6 +77,7 @@ decided to port and maintain my own edition.
 > [Blog](https://chawyehsu.com) · GitHub [@chawyehsu](https://github.com/chawyehsu) · Twitter [@chawyehsu](https://twitter.com/chawyehsu)
 
 [GNU nano text editor]: https://www.nano-editor.org
+[GitHub Releases]: https://github.com/chawyehsu/nano-for-windows/releases
 [pixi]: https://pixi.sh
 [Jujutsu]: https://www.jj-vcs.dev/
 [Official build for Windows]: https://www.nano-editor.org/dist/win32-support/
