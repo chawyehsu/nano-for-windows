@@ -1,5 +1,6 @@
 #!/usr/bin/env pwsh
 
+$ErrorActionPreference = "Stop"
 $CACHE_DIR = "$PSScriptRoot/../../.cache"
 
 function Get-NanoCondaLatestRelease {
