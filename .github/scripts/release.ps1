@@ -69,8 +69,13 @@ try {
 }
 
 if (Test-Path "$CACHE_DIR/$fileName") {
-    if ($env:CI) {
-        gh release create "v$($CondaVersion)" "$CACHE_DIR/$fileName" --latest --title "v$($CondaVersion)" --notes "GNU nano v$($CondaVersion) for Windows"
+    try {
+        if ($env:CI) {
+            gh release create "v$($CondaVersion)" "$CACHE_DIR/$fileName" --latest --title "v$($CondaVersion)" --notes "GNU nano v$($CondaVersion) for Windows"
+        }
+        Write-Host "Release v$CondaVersion created successfully." -ForegroundColor Green
+    } catch {
+        Write-Host "Failed to create GitHub release" -ForegroundColor Red
+        exit 1
     }
-    Write-Host "Release v$CondaVersion created successfully." -ForegroundColor Green
 }
