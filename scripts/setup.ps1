@@ -20,9 +20,9 @@ $ErrorActionPreference = "Stop"
 $CACHE_DIR = "$PSScriptRoot/../.cache"
 
 function Get-LatestNanoRelease {
-    $url = "https://cgit.git.savannah.gnu.org/cgit/nano.git/plain/NEWS"
+    $url = "https://www.nano-editor.org/dist/latest/NEWS"
     try {
-        $data = Invoke-WebRequest -Uri $url
+        $data = Invoke-RestMethod -Uri $url
     } catch {
         Write-Host "Failed to fetch NEWS file from GNU nano repository." -ForegroundColor Red
         exit 1
@@ -178,6 +178,7 @@ function Invoke-NewWorkingCopy {
 
     # Commit the nano source
     & jj describe -m "nano: v$NanoVersion"
+    & jj bookmark set "v$NanoVersion"
     & jj new
     # Update gitignore
     Copy-Item -Path "$PSScriptRoot/gitignore.tpl" -Destination "$PSScriptRoot/../.gitignore" -Force
