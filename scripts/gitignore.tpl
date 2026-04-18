@@ -10,6 +10,7 @@ events.json
 # rejected patch hunks
 *.rej
 
+/po
 /doc
 # nano .gitignore
 *~

@@ -6,6 +6,28 @@
 
 ## Getting Started
 
+### Features
+
+- Unicode/**UTF-8** support
+- Syntax highlighting support
+- nanorc support and system-wide nanorc discovery
+- **Spell checker** and **Formatter** support (only external spell checkers)
+- **Full keyboard binding** support
+  1. For `M-X` rebindings, full support for all characters in
+     the ASCII range is now available. This means you can configure
+     and use key combinations such as `M-<`, `M-=`, `M-@`, etc.,
+     with more consistent key bindings with the nano on Unix.
+  2. For `M-X` rebindings, only the left `Alt` key is now captured.
+     This means you can still type less frequently used characters
+     using the right `Alt` as `AltGr` key even if you have configured
+     many key combos of `Alt`. This is especially crucial for users
+     with keyboard layouts such as US International and German.
+  3. Most key combinations related to `Backspace`, `Del`, and the
+     arrow keys now behave consistently with the nano on Unix.
+- `positionlog` support (Saved anchors restored when file is reopened, v8.5+)
+- Copy/paste support
+- Mouse support
+
 ### Install
 
 Pre-built artifacts of **nano-for-windows** are available on chawyehsu's conda
