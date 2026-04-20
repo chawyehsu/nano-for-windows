@@ -34,7 +34,7 @@ Pre-built artifacts of **nano-for-windows** are available on chawyehsu's conda
 channel. You can install it with [pixi] or conda/mamba.
 
 ```shell
-pixi global install nano -c chawyehsu
+pixi global install nano -c chawyehsu -c conda-forge
 ```
 
 Or you may download the pre-built artifact from [GitHub Releases], extract the
