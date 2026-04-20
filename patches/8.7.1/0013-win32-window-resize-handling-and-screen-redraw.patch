@@ -1,39 +1,13 @@
-From 05a6369f8bfc377871cd7bca9b13deab08d3b34d Mon Sep 17 00:00:00 2001
+From cb4c52eef56f82f3a7e09757d13e546c7deda38a Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 03:48:29 +0800
 Subject: [PATCH 13/16] win32: window resize handling and screen redraw
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
- src/nano.c  | 7 ++-----
  src/winio.c | 8 ++++++++
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ 1 file changed, 8 insertions(+)
 
-diff --git a/src/nano.c b/src/nano.c
-index 17aacb1..08492bc 100644
---- a/src/nano.c
-+++ b/src/nano.c
-@@ -1057,10 +1057,8 @@ void regenerate_screen(void)
- 	/* Reset the trigger. */
- 	the_window_resized = FALSE;
- 
--	/* Leave and immediately reenter curses mode, so that ncurses notices
--	 * the new screen dimensions and sets LINES and COLS accordingly. */
--	endwin();
--	refresh();
-+	resize_term(0, 0);
-+	erase();
- 
- 	sidebar = (ISSET(INDICATOR) && LINES > 5 && COLS > 9) ? 1 : 0;
- 	bardata = nrealloc(bardata, LINES * sizeof(int));
-@@ -1069,7 +1067,6 @@ void regenerate_screen(void)
- 
- 	/* Put the terminal in the desired state again, and
- 	 * recreate the subwindows with their (new) sizes. */
--	terminal_init();
- 	window_init();
- 
- 	/* Only when fully initialized, redraw the contents of the subwindows. */
 diff --git a/src/winio.c b/src/winio.c
 index 91a582b..dd3d541 100644
 --- a/src/winio.c

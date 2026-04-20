@@ -1,4 +1,4 @@
-From f4aaeb3c6abff46256696ca02953c81fcb7b3fb9 Mon Sep 17 00:00:00 2001
+From f7f621c2f6c7f3ef95489197144623e600e48a34 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:40:09 +0800
 Subject: [PATCH 04/16] win32: fix file parentdir access

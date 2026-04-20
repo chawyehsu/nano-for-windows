@@ -1,4 +1,4 @@
-From 17dd76ff77947fb8efec0b1f1185779013ea11f6 Mon Sep 17 00:00:00 2001
+From 097fe95d0b7339a55936d690cade86d4f620a6fd Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:42:53 +0800
 Subject: [PATCH 08/16] win32: utf8 support and detect wide char width

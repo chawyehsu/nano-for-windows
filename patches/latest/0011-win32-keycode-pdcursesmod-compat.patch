@@ -1,4 +1,4 @@
-From 0baa60a6f41dfd508a14b3b58d5f85323193e38c Mon Sep 17 00:00:00 2001
+From 03315f3ffd1d64af13881293c41f40258c8f6b84 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:48 +0800
 Subject: [PATCH 11/16] win32: keycode pdcursesmod compat

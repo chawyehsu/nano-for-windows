@@ -1,4 +1,4 @@
-From 23bbe97097001e377c956de04e7c427940b2431f Mon Sep 17 00:00:00 2001
+From de45cc1e7937d1473346952c0595ed0ee39118d2 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:44:02 +0800
 Subject: [PATCH 12/16] win32: colortype pdcursesmod compat

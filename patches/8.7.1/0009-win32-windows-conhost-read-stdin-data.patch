@@ -1,4 +1,4 @@
-From 6f3873eca6cc790e6e7aae5bd8bd06562bad072a Mon Sep 17 00:00:00 2001
+From 278096e5d15b5d734a5b08040e6b9b73bb750ba0 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:16 +0800
 Subject: [PATCH 09/16] win32: windows conhost read stdin data

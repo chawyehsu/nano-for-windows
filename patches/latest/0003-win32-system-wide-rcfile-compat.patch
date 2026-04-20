@@ -1,4 +1,4 @@
-From 12e124bfb9a9333c10ecd4ef6abf28e98b139001 Mon Sep 17 00:00:00 2001
+From dff88491c5b34601b1aac90d3be50cd02f86f981 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Sat, 18 Apr 2026 04:08:13 +0800
 Subject: [PATCH 03/16] win32: system-wide rcfile compat

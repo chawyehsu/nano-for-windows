@@ -1,4 +1,4 @@
-From 7cb053a3402c99de3c643fcaf7641c9d00679c38 Mon Sep 17 00:00:00 2001
+From 1d7f48b644bbb1bbf252bd7604ccf531570a02cb Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:34 +0800
 Subject: [PATCH 10/16] win32: remove halfdelay for unicode

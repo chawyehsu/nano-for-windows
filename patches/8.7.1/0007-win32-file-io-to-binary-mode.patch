@@ -1,4 +1,4 @@
-From ac9098d887e23c7c2929cad8b133f4ec75692ddc Mon Sep 17 00:00:00 2001
+From f2328602a7ba0b2bbd0eda416090560cd7d9afb9 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:41:51 +0800
 Subject: [PATCH 07/16] win32: file io to binary mode

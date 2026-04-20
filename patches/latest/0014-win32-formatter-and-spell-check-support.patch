@@ -1,4 +1,4 @@
-From 9f25b214c10fad24b2cf5776eb1fbc713dd0e71c Mon Sep 17 00:00:00 2001
+From bf583942e9d447c9d3aa6e90d88696bd6e2ed533 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 03:48:29 +0800
 Subject: [PATCH 14/16] win32: formatter and spell check support
