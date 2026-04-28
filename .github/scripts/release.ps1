@@ -95,8 +95,7 @@ if (-not (Test-Path $CACHE_DIR)) {
 $assetPaths = @()
 
 foreach ($CondaRelease in $CondaReleases) {
-    $fileName = (Split-Path $CondaRelease.url -Leaf) -replace '.conda', "-$($CondaRelease.subdir).conda"
-    $assetPath = "$CACHE_DIR/$fileName"
+    $assetPath = "$CACHE_DIR/nano-$($CondaRelease.conda_version)-$($CondaRelease.subdir).conda"
 
     if (Test-Path $assetPath) {
         Remove-Item $assetPath -Force
