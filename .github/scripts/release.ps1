@@ -21,7 +21,7 @@ platforms = ["win-64", "win-arm64", "win-32"]
     if (Test-Path $fakeManifestPath) {
         Remove-Item $fakeManifestPath -Force
     }
-    New-Item -ItemType File -Path $fakeManifestPath -Value $fakeManifest | Out-Null
+    New-Item -ItemType File -Path $fakeManifestPath -Value $fakeManifest -Force | Out-Null
 
     $json = $(pixi search nano -c chawyehsu --json --manifest-path $fakeManifestPath) | ConvertFrom-Json
     $latestReleases = @()
