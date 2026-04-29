@@ -1,4 +1,4 @@
-From de45cc1e7937d1473346952c0595ed0ee39118d2 Mon Sep 17 00:00:00 2001
+From 579f875325c7b929dc5dd21ba4cfca3c0d1a83b2 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:44:02 +0800
 Subject: [PATCH 12/16] win32: colortype pdcursesmod compat
@@ -6,10 +6,12 @@ Subject: [PATCH 12/16] win32: colortype pdcursesmod compat
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
  src/definitions.h |  2 +-
- src/global.c      |  2 +-
- src/prototypes.h  |  2 +-
+ src/global.c      |  4 ++--
+ src/nano.c        |  4 ++--
+ src/prototypes.h  |  4 ++--
  src/rcfile.c      | 10 +++++++---
- 4 files changed, 10 insertions(+), 6 deletions(-)
+ src/winio.c       |  2 +-
+ 6 files changed, 15 insertions(+), 11 deletions(-)
 
 diff --git a/src/definitions.h b/src/definitions.h
 index 18cd28e..498842a 100644
@@ -25,9 +27,18 @@ index 18cd28e..498842a 100644
  	regex_t *start;
  		/* The compiled regular expression for 'start=', or the only one. */
 diff --git a/src/global.c b/src/global.c
-index 8a6b985..addf48a 100644
+index 8a6b985..bd102a2 100644
 --- a/src/global.c
 +++ b/src/global.c
+@@ -147,7 +147,7 @@ int margin = 0;
+ int sidebar = 0;
+ 		/* Becomes 1 when the indicator "scroll bar" must be shown. */
+ #ifndef NANO_TINY
+-int *bardata = NULL;
++chtype *bardata = NULL;
+ 		/* An array of characters that together depict the scrollbar. */
+ ssize_t stripe_column = 0;
+ 		/* The column at which a vertical bar will be drawn. */
 @@ -269,7 +269,7 @@ int hilite_attribute = A_REVERSE;
  colortype* color_combo[NUMBER_OF_ELEMENTS] = {NULL};
  		/* The color combinations for interface elements given in the rcfile. */
@@ -37,10 +48,41 @@ index 8a6b985..addf48a 100644
  		/* The processed color pairs for the interface elements. */
  
  char *homedir = NULL;
+diff --git a/src/nano.c b/src/nano.c
+index 72c25f4..b751566 100644
+--- a/src/nano.c
++++ b/src/nano.c
+@@ -1064,7 +1064,7 @@ void regenerate_screen(void)
+ 	refresh();
+ 
+ 	sidebar = (ISSET(INDICATOR) && LINES > 5 && COLS > 9) ? 1 : 0;
+-	bardata = nrealloc(bardata, LINES * sizeof(int));
++	bardata = nrealloc(bardata, LINES * sizeof(chtype));
+ 
+ 	editwincols = COLS - margin - sidebar;
+ 
+@@ -2445,7 +2445,7 @@ int main(int argc, char **argv)
+ 
+ #ifndef NANO_TINY
+ 	sidebar = (ISSET(INDICATOR) && LINES > 5 && COLS > 9) ? 1 : 0;
+-	bardata = nrealloc(bardata, LINES * sizeof(int));
++	bardata = nrealloc(bardata, LINES * sizeof(chtype));
+ #endif
+ 	editwincols = COLS - sidebar;
+ 
 diff --git a/src/prototypes.h b/src/prototypes.h
-index 8553779..5677796 100644
+index 8553779..bddf473 100644
 --- a/src/prototypes.h
 +++ b/src/prototypes.h
+@@ -102,7 +102,7 @@ extern int editwincols;
+ extern int margin;
+ extern int sidebar;
+ #ifndef NANO_TINY
+-extern int *bardata;
++extern chtype *bardata;
+ extern ssize_t stripe_column;
+ extern int cycling_aim;
+ #endif
 @@ -181,7 +181,7 @@ extern int hilite_attribute;
  #ifdef ENABLE_COLOR
  extern colortype *color_combo[NUMBER_OF_ELEMENTS];
@@ -85,6 +127,19 @@ index 2531959..23055b9 100644
  
  	if (*ptr == '\0') {
  		jot_error(N_("Missing color name"));
+diff --git a/src/winio.c b/src/winio.c
+index 7818a7b..762001b 100644
+--- a/src/winio.c
++++ b/src/winio.c
+@@ -2309,7 +2309,7 @@ void statusline(message_type importance, const char *msg, ...)
+ 	static size_t start_col = 0;
+ 	char *compound, *message;
+ 	bool bracketed;
+-	int colorpair;
++	chtype colorpair;
+ 	va_list ap;
+ 
+ 	/* Drop all waiting keystrokes upon any kind of "error". */
 -- 
 2.53.0.windows.3
 
