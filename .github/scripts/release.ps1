@@ -104,7 +104,7 @@ foreach ($CondaRelease in $CondaReleases) {
     try {
         Write-Host "Downloading nano package from Anaconda ($($CondaRelease.subdir)): $($CondaRelease.url)" -ForegroundColor Cyan
         Invoke-WebRequest -Uri $CondaRelease.url -OutFile $assetPath
-        $assetPaths += $assetPath
+        $assetPaths += Resolve-Path $assetPath
     } catch {
         Write-Host "Failed to download nano package for $($CondaRelease.subdir) from Anaconda" -ForegroundColor Red
         exit 1
@@ -112,23 +112,31 @@ foreach ($CondaRelease in $CondaReleases) {
 }
 
 if ($assetPaths.Count -eq $REUPLOAD_PLATFORMS.Count) {
-    try {
-        $releaseTag = "v$($CondaVersion)"
-        $releaseExists = $null -ne $(gh release view $releaseTag --json tagName 2>$null)
+    $releaseTag = "v$($CondaVersion)"
 
+    try {
+        $releaseExists = $null -ne $(gh release view $releaseTag --json tagName 2>$null)
         if ($releaseExists) {
             Write-Host "Release $releaseTag already exists on GitHub" -ForegroundColor Green
             exit 0
-        } else {
-            if ($env:CI) {
-                $paths = $assetPaths -join ' '
-                gh release create $releaseTag $paths --latest --title $releaseTag --notes "GNU nano v$($CondaVersion) for Windows"
-            }
         }
-        Write-Host "Release v$CondaVersion created successfully." -ForegroundColor Green
     } catch {
-        Write-Host "Failed to create GitHub release" -ForegroundColor Red
+        Write-Host "Failed to check existing GitHub releases" -ForegroundColor Red
         exit 1
+    }
+
+    if ($env:CI) {
+        Write-Host "Creating GitHub release $releaseTag with assets..." -ForegroundColor Cyan
+        try {
+            gh release create $releaseTag @assetPaths --latest --title $releaseTag --notes "GNU nano v$($CondaVersion) for Windows"
+            Write-Host "Release v$CondaVersion created successfully." -ForegroundColor Green
+        } catch {
+            Write-Host "Failed to create GitHub release" -ForegroundColor Red
+            exit 1
+        }
+    } else {
+        Write-Host "Dry run: GitHub release $releaseTag would be created with assets:" -ForegroundColor Gray
+        $assetPaths | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
     }
 } else {
     Write-Host "Not all assets were downloaded successfully. Expected: $($REUPLOAD_PLATFORMS.Count), Downloaded: $($assetPaths.Count)" -ForegroundColor Red
