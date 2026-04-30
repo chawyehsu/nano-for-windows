@@ -37,6 +37,13 @@ channel. You can install it with [pixi] or conda/mamba.
 pixi global install nano -c chawyehsu -c conda-forge
 ```
 
+Or you can install it with [Scoop](https://scoop.sh/):
+
+```plain
+scoop bucket add dorado https://github.com/chawyehsu/dorado
+scoop install dorado/nano
+```
+
 Or you may download the pre-built artifact from [GitHub Releases], extract the
 files to a directory and add the `bin` directory to your `PATH` environment variable.
 
