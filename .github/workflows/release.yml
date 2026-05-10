@@ -22,6 +22,8 @@ jobs:
         uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
         with:
           run-install: false
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y libarchive-tools
       - name: Run
         run: ./.github/scripts/release.ps1
         env:
