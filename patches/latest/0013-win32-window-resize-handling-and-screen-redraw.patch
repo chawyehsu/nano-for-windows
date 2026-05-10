@@ -1,32 +1,31 @@
-From 6175edd8339adf39d20423f6b92679e4ea227347 Mon Sep 17 00:00:00 2001
+From 279441e77751ebe3406139572a03a57f7fe7d81e Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 03:48:29 +0800
-Subject: [PATCH 13/16] win32: window resize handling and screen redraw
+Subject: [PATCH 13/17] win32: window resize handling and screen redraw
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
- src/winio.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ src/winio.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/src/winio.c b/src/winio.c
-index 7818a7b..c507570 100644
+index 762001b..6d90e57 100644
 --- a/src/winio.c
 +++ b/src/winio.c
-@@ -223,6 +223,14 @@ void read_keys_from(WINDOW *frame)
+@@ -223,6 +223,13 @@ void read_keys_from(WINDOW *frame)
  #else
  		if (!the_window_resized)
  			input = wgetch(frame);
 +
 +		/* SIGWINCH is not available on Windows, so we simulate the effect of
-+		 * the `handle_sigwinch` handler by checking for PDCurses's KEY_RESIZE. */
++		 * the handler by checking for PDCurses's KEY_RESIZE. */
 +		if (input == KEY_RESIZE) {
-+			the_window_resized = TRUE;
-+			resized_for_browser = TRUE;
++			handle_sigwinch(0);
 +		}
 +
  		if (the_window_resized) {
  			regenerate_screen();
  			input = THE_WINDOW_RESIZED;
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 

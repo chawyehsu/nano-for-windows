@@ -1,7 +1,7 @@
-From e78dcf893ea390cf8f970e86ec9f1b0e88d613ad Mon Sep 17 00:00:00 2001
+From 09f21949fd76b61f41015d03586bb4824c0d7ce7 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:41:51 +0800
-Subject: [PATCH 07/16] win32: file io to binary mode
+Subject: [PATCH 07/17] win32: file io to binary mode
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -25,5 +25,5 @@ index 3a7e47c..6fc3e20 100644
  	struct vt_stat dummy;
  
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 

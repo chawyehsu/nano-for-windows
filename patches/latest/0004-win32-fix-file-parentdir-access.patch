@@ -1,7 +1,7 @@
-From 341dc98ed34e5f7600bf7bb806609c978dfe5cd3 Mon Sep 17 00:00:00 2001
+From 331a66dc982e6848d50e2c56332b615797f3c946 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:40:09 +0800
-Subject: [PATCH 04/16] win32: fix file parentdir access
+Subject: [PATCH 04/17] win32: fix file parentdir access
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -22,5 +22,5 @@ index a8a37cc..f93acc0 100644
  #ifndef NANO_TINY
  	else if (ISSET(LOCKING) && !ISSET(VIEW_MODE) && access(parentdir, W_OK) < 0)
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 

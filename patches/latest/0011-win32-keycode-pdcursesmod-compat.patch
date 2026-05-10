@@ -1,7 +1,7 @@
-From 03315f3ffd1d64af13881293c41f40258c8f6b84 Mon Sep 17 00:00:00 2001
+From efdc7fccac68495b76291b812972c4b8d6c2145a Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:48 +0800
-Subject: [PATCH 11/16] win32: keycode pdcursesmod compat
+Subject: [PATCH 11/17] win32: keycode pdcursesmod compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -228,5 +228,5 @@ index 42225df..7818a7b 100644
  	/* Spurious codes from VTE -- see https://sv.gnu.org/bugs/?64578. */
  	if (keycode == mousefocusin || keycode == mousefocusout)
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 

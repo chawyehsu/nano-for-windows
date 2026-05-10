@@ -1,7 +1,7 @@
-From ef8e4579c7221d52378142cadba687db2c53da42 Mon Sep 17 00:00:00 2001
+From dc5106016b651eb5edfa7365c1e6f477ca49bed9 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:16 +0800
-Subject: [PATCH 09/16] win32: windows conhost read stdin data
+Subject: [PATCH 09/17] win32: windows conhost read stdin data
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -47,5 +47,5 @@ index c11048e..72c25f4 100644
  		terminal_init();
  		doupdate();
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 

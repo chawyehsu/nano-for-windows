@@ -1,7 +1,7 @@
-From dff88491c5b34601b1aac90d3be50cd02f86f981 Mon Sep 17 00:00:00 2001
+From cffbdab132eebe0df8b1a39ddb6677ca40d0a8fc Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Sat, 18 Apr 2026 04:08:13 +0800
-Subject: [PATCH 03/16] win32: system-wide rcfile compat
+Subject: [PATCH 03/17] win32: system-wide rcfile compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -34,5 +34,5 @@ index 696599b..2531959 100644
  
  		get_homedir();
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 

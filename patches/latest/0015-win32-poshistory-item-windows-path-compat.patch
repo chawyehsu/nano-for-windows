@@ -1,7 +1,7 @@
-From e665ac6b60f39e37f6c3e83912ab520a37a2440c Mon Sep 17 00:00:00 2001
+From 2e19243b8bc2a75dbbd8b03a4c7690e804ca0da3 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Sat, 18 Apr 2026 14:47:12 +0800
-Subject: [PATCH 15/16] win32: poshistory item windows path compat
+Subject: [PATCH 15/17] win32: poshistory item windows path compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -38,5 +38,5 @@ index cf5451d..5034cb9 100644
  
  		/* Decode NULs as embedded newlines. */
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 

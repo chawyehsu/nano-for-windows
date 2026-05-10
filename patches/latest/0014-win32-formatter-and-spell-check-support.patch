@@ -1,7 +1,7 @@
-From bf583942e9d447c9d3aa6e90d88696bd6e2ed533 Mon Sep 17 00:00:00 2001
+From 385bdf9fc99c3f7a6adcf5601bcfaaecf13ec94f Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 03:48:29 +0800
-Subject: [PATCH 14/16] win32: formatter and spell check support
+Subject: [PATCH 14/17] win32: formatter and spell check support
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -200,5 +200,5 @@ index b8899da..e4bff6b 100644
  	unlink(temp_name);
  	free(temp_name);
 -- 
-2.53.0.windows.3
+2.54.0.windows.1
 
