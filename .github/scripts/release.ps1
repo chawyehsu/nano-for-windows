@@ -74,11 +74,13 @@ function Resolve-PathWithReparseCheck {
     $fullPath = [System.IO.Path]::GetFullPath($Path)
     $parts = $fullPath -split '[\\/]' | Where-Object { $_ -ne '' }
 
-    # Drive letter
-    $current = $parts[0]
+    # Drive letter (parts[0]) on Windows or root slash on Unix
+    $current = if ($IsWindows) { $parts[0] } else { [System.IO.Path]::DirectorySeparatorChar }
     $resolvedParts += $current
 
-    for ($i = 1; $i -lt $parts.Length; $i++) {
+    # 1 for Windows to skip drive letter
+    $i = if ($IsWindows) { 1 } else { 0 }
+    for (; $i -lt $parts.Length; $i++) {
         $current = Join-Path $current $parts[$i]
 
         if (-not (Test-Path -LiteralPath $current)) {
@@ -99,7 +101,7 @@ function Resolve-PathWithReparseCheck {
                 $current = [System.IO.Path]::GetFullPath($targetPath)
 
                 $resolvedParts = $current -split '[\\/]' | Where-Object { $_ -ne '' }
-                $current = $resolvedParts -join '\'
+                $current = $resolvedParts -join [System.IO.Path]::DirectorySeparatorChar
                 continue
             }
         }
@@ -107,9 +109,16 @@ function Resolve-PathWithReparseCheck {
         $resolvedParts += $parts[$i]
     }
 
+    $resolvedPath = if ($IsWindows) {
+        $resolvedParts -join [System.IO.Path]::DirectorySeparatorChar
+    } else {
+        $paths = $resolvedParts[1..$resolvedParts.Length]
+        '/' + ($paths -join [System.IO.Path]::DirectorySeparatorChar)
+    }
+
     return [PSCustomObject]@{
         OriginalPath = $fullPath
-        ResolvedPath = ($resolvedParts -join '\')
+        ResolvedPath = $resolvedPath
     }
 }
 
@@ -282,6 +291,7 @@ foreach ($CondaRelease in $CondaReleases) {
         $assetPaths += (Resolve-PathWithReparseCheck -Path (Resolve-Path $assetPath)).ResolvedPath
     } catch {
         Write-Host "Failed to download nano package for $($CondaRelease.subdir) from Anaconda" -ForegroundColor Red
+        Write-Host $_.Exception.Message -ForegroundColor Red
         exit 1
     }
 }
