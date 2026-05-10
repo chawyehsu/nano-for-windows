@@ -3,6 +3,8 @@
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
+
+$TarCommand = if ($IsLinux) { 'bsdtar' } else { 'tar' }
 $CACHE_DIR = "$PSScriptRoot/../../.cache"
 $REUPLOAD_PLATFORMS = @('win-64', 'win-arm64')
 
@@ -135,7 +137,7 @@ function Invoke-ExtractCondaPayload {
     }
     New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 
-    & tar -xf $CondaPath.FullName -C $OutputDir | Out-Null
+    & $TarCommand -xf $CondaPath.FullName -C $OutputDir | Out-Null
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to extract .conda archive: $($CondaPath.Name)"
     }
@@ -164,7 +166,7 @@ function Expand-PkgTarZst {
     $packageDir = Join-Path $OutputDir 'package'
     New-Item -ItemType Directory -Path $packageDir -Force | Out-Null
 
-    & tar -xf $TarZstPath.FullName -C $packageDir | Out-Null
+    & $TarCommand -xf $TarZstPath.FullName -C $packageDir | Out-Null
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to extract payload tar.zst: $($TarZstPath.Name)"
     }
@@ -194,7 +196,7 @@ function Invoke-RepackToZip {
         throw "Source directory is empty, cannot create zip archive: $SourceDir"
     }
 
-    & tar -a -cf $ZipPath.FullName -C $SourceDir @entries | Out-Null
+    & $TarCommand -a -cf $ZipPath.FullName -C $SourceDir @entries | Out-Null
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to create zip archive: $($ZipPath.Name)"
     }
@@ -241,9 +243,8 @@ function Convert-CondaAssetToZip {
 }
 
 ## Main script logic
-$tarCommand = if ($IsLinux) { 'bsdtar' } else { 'tar' }
-if (-not (Get-Command $tarCommand -ErrorAction SilentlyContinue)) {
-    Write-Host "$tarCommand command is not available." -ForegroundColor Red
+if (-not (Get-Command $TarCommand -ErrorAction SilentlyContinue)) {
+    Write-Host "$TarCommand command is not available." -ForegroundColor Red
     exit 1
 }
 
