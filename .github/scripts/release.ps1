@@ -241,8 +241,9 @@ function Convert-CondaAssetToZip {
 }
 
 ## Main script logic
-if (-not (Get-Command 'tar' -ErrorAction SilentlyContinue)) {
-    Write-Host "tar command is not available." -ForegroundColor Red
+$tarCommand = if ($IsLinux) { 'bsdtar' } else { 'tar' }
+if (-not (Get-Command $tarCommand -ErrorAction SilentlyContinue)) {
+    Write-Host "$tarCommand command is not available." -ForegroundColor Red
     exit 1
 }
 
