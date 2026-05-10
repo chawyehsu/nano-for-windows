@@ -9,8 +9,10 @@ platforms = ["win-64"]
 [tasks]
 clean = { cmd = "make clean", description = "Clean the build artifacts" }
 configure = { cmd = "bash ./scripts/configure.sh", description = "Configure the build system" }
-build = { cmd = "bear -- make -j$(nproc)", description = "Build the project", depends-on = ["configure"] }
-rebuild = { cmd = "pwsh -nop ./scripts/patch-compile-commands.ps1", description = "Rebuild the project with patched compile_commands.json", depends-on = ["clean", "build"] }
+make = { cmd = "bear -- make -j$(nproc)", description = "Build the project", depends-on = ["configure"] }
+patch-compile-commands = { cmd = "pwsh -nop ./scripts/patch-compile-commands.ps1", description = "Patch the compile_commands.json file", depends-on = ["make"] }
+build = { description = "Build the project with patched compile_commands.json", depends-on = ["patch-compile-commands"] }
+rebuild = { description = "Rebuild the project with patched compile_commands.json", depends-on = ["clean", "patch-compile-commands"] }
 setup = { cmd = "pwsh -nop ./scripts/setup.ps1", description = "Set up the working copy" }
 
 [dependencies]
