@@ -8,7 +8,7 @@
 
 ### Features
 
-- Unicode/**UTF-8** support
+- Unicode/**UTF-8** support (built against UCRT)
 - Syntax highlighting support
 - nanorc support and system-wide nanorc discovery
 - **Spell checker** and **Formatter** support (only external spell checkers)
