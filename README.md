@@ -2,7 +2,7 @@
 
 > Windows port of the [GNU nano text editor], made with the conda-forge ecosystem
 
-[![Release](https://github.com/chawyehsu/nano-for-windows/actions/workflows/release.yml/badge.svg)](https://github.com/chawyehsu/nano-for-windows/actions/workflows/release.yml) [![Downloads](https://img.shields.io/conda/dn/chawyehsu/nano.svg)](https://anaconda.org/chawyehsu/nano) [![Version](https://img.shields.io/conda/vn/chawyehsu/nano.svg)](https://anaconda.org/chawyehsu/nano) [![GitHub Release](https://img.shields.io/github/v/release/chawyehsu/nano-for-windows.svg)](https://github.com/chawyehsu/nano-for-windows/releases)
+[![Release](https://github.com/chawyehsu/nano-for-windows/actions/workflows/release.yml/badge.svg)](https://github.com/chawyehsu/nano-for-windows/actions/workflows/release.yml) [![Downloads](https://img.shields.io/github/downloads/chawyehsu/nano-for-windows/total?style=flat&logo=github)](https://github.com/chawyehsu/nano-for-windows/releases) [![Conda Version](https://img.shields.io/conda/vn/chawyehsu/nano.svg)](https://anaconda.org/chawyehsu/nano) [![GitHub Release](https://img.shields.io/github/v/release/chawyehsu/nano-for-windows.svg?logo=github)](https://github.com/chawyehsu/nano-for-windows/releases)
 
 ## Getting Started
 
