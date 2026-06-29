@@ -1,7 +1,7 @@
-From d498ac53f5da64aaf5f9681f1723fd6db0179c63 Mon Sep 17 00:00:00 2001
+From eb373509d736853658ce4382a9914c21683a3db9 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:44:02 +0800
-Subject: [PATCH 12/17] win32: colortype pdcursesmod compat
+Subject: [PATCH 12/18] win32: colortype pdcursesmod compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -14,7 +14,7 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  6 files changed, 15 insertions(+), 11 deletions(-)
 
 diff --git a/src/definitions.h b/src/definitions.h
-index 18cd28e..498842a 100644
+index 7dde3a0..d5859eb 100644
 --- a/src/definitions.h
 +++ b/src/definitions.h
 @@ -388,7 +388,7 @@ typedef struct colortype {
@@ -27,7 +27,7 @@ index 18cd28e..498842a 100644
  	regex_t *start;
  		/* The compiled regular expression for 'start=', or the only one. */
 diff --git a/src/global.c b/src/global.c
-index 8a6b985..bd102a2 100644
+index 00c333a..f13f450 100644
 --- a/src/global.c
 +++ b/src/global.c
 @@ -147,7 +147,7 @@ int margin = 0;
@@ -49,10 +49,10 @@ index 8a6b985..bd102a2 100644
  
  char *homedir = NULL;
 diff --git a/src/nano.c b/src/nano.c
-index 72c25f4..b751566 100644
+index 320c427..805cb88 100644
 --- a/src/nano.c
 +++ b/src/nano.c
-@@ -1064,7 +1064,7 @@ void regenerate_screen(void)
+@@ -1053,7 +1053,7 @@ void regenerate_screen(void)
  	refresh();
  
  	sidebar = (ISSET(INDICATOR) && LINES > 5 && COLS > 9) ? 1 : 0;
@@ -61,7 +61,7 @@ index 72c25f4..b751566 100644
  
  	editwincols = COLS - margin - sidebar;
  
-@@ -2445,7 +2445,7 @@ int main(int argc, char **argv)
+@@ -2433,7 +2433,7 @@ int main(int argc, char **argv)
  
  #ifndef NANO_TINY
  	sidebar = (ISSET(INDICATOR) && LINES > 5 && COLS > 9) ? 1 : 0;
@@ -71,7 +71,7 @@ index 72c25f4..b751566 100644
  	editwincols = COLS - sidebar;
  
 diff --git a/src/prototypes.h b/src/prototypes.h
-index 8553779..bddf473 100644
+index f09a1c3..7d404c7 100644
 --- a/src/prototypes.h
 +++ b/src/prototypes.h
 @@ -102,7 +102,7 @@ extern int editwincols;
@@ -93,10 +93,10 @@ index 8553779..bddf473 100644
  extern char *homedir;
  extern char *statedir;
 diff --git a/src/rcfile.c b/src/rcfile.c
-index 2531959..23055b9 100644
+index effeefb..739752a 100644
 --- a/src/rcfile.c
 +++ b/src/rcfile.c
-@@ -1022,7 +1022,11 @@ short closest_index_color(short red, short green, short blue)
+@@ -1014,7 +1014,11 @@ short closest_index_color(short red, short green, short blue)
  	/* Translation table, from 14 intended gray levels to 24 available levels. */
  	static const short gray[] = { 1, 2, 3, 4, 5, 6, 7, 9, 11, 13, 15, 18, 21, 23 };
  
@@ -109,7 +109,7 @@ index 2531959..23055b9 100644
  		return THE_DEFAULT;
  	else if (red == green && green == blue && 0 < red && red < 0xF)
  		return 232 + gray[red - 1];
-@@ -1100,7 +1104,7 @@ short color_to_short(const char *colorname, bool *vivid, bool *thick)
+@@ -1092,7 +1096,7 @@ short color_to_short(const char *colorname, bool *vivid, bool *thick)
  
  /* Parse the color name (or pair of color names) in the given string.
   * Return FALSE when any color name is invalid; otherwise return TRUE. */
@@ -118,7 +118,7 @@ index 2531959..23055b9 100644
  {
  	bool vivid, thick;
  	char *comma;
-@@ -1162,7 +1166,7 @@ void parse_rule(char *ptr, int rex_flags)
+@@ -1154,7 +1158,7 @@ void parse_rule(char *ptr, int rex_flags)
  {
  	char *names, *regexstring;
  	short fg, bg;
@@ -128,10 +128,10 @@ index 2531959..23055b9 100644
  	if (*ptr == '\0') {
  		jot_error(N_("Missing color name"));
 diff --git a/src/winio.c b/src/winio.c
-index 7818a7b..762001b 100644
+index 0812267..47d4e3a 100644
 --- a/src/winio.c
 +++ b/src/winio.c
-@@ -2309,7 +2309,7 @@ void statusline(message_type importance, const char *msg, ...)
+@@ -2304,7 +2304,7 @@ void statusline(message_type importance, const char *msg, ...)
  	static size_t start_col = 0;
  	char *compound, *message;
  	bool bracketed;

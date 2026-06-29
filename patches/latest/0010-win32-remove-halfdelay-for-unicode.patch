@@ -1,7 +1,7 @@
-From abfc670014e0854c8d37786460061b4072a603f2 Mon Sep 17 00:00:00 2001
+From 4a4fd23aba204af89d703ffdd840ba41652fd74f Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:34 +0800
-Subject: [PATCH 10/17] win32: remove halfdelay for unicode
+Subject: [PATCH 10/18] win32: remove halfdelay for unicode
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 3 deletions(-)
 
 diff --git a/src/winio.c b/src/winio.c
-index 7967390..42225df 100644
+index be75c74..fde1524 100644
 --- a/src/winio.c
 +++ b/src/winio.c
 @@ -213,9 +213,6 @@ void read_keys_from(WINDOW *frame)

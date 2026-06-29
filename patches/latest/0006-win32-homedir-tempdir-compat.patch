@@ -1,7 +1,7 @@
-From cac0ca725aaecc2779dd0a8d9822002cdcea5601 Mon Sep 17 00:00:00 2001
+From e777f600a6ce5b482f92c0c9d6af612543ed2e1a Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:41:05 +0800
-Subject: [PATCH 06/17] win32: homedir tempdir compat
+Subject: [PATCH 06/18] win32: homedir tempdir compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -10,10 +10,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  2 files changed, 6 insertions(+), 10 deletions(-)
 
 diff --git a/src/files.c b/src/files.c
-index 36f8c3a..e541757 100644
+index 4f1b46c..cb4cde7 100644
 --- a/src/files.c
 +++ b/src/files.c
-@@ -1462,7 +1462,7 @@ char *check_writable_directory(const char *path)
+@@ -1420,7 +1420,7 @@ char *check_writable_directory(const char *path)
   * file stream opened in read-write mode.  On error, return NULL. */
  char *safe_tempfile(FILE **stream)
  {
@@ -22,7 +22,7 @@ index 36f8c3a..e541757 100644
  	char *tempdir = NULL, *tempfile_name = NULL;
  	char *extension;
  	int descriptor;
-@@ -1476,7 +1476,7 @@ char *safe_tempfile(FILE **stream)
+@@ -1434,7 +1434,7 @@ char *safe_tempfile(FILE **stream)
  		tempdir = check_writable_directory(P_tmpdir);
  
  	if (tempdir == NULL)
@@ -32,7 +32,7 @@ index 36f8c3a..e541757 100644
  	extension = strrchr(openfile->filename, '.');
  	normalize_slashes(extension);
 diff --git a/src/utils.c b/src/utils.c
-index 84df35c..ad14c79 100644
+index 004ff95..51b72da 100644
 --- a/src/utils.c
 +++ b/src/utils.c
 @@ -35,15 +35,11 @@ void get_homedir(void)

@@ -1,7 +1,7 @@
-From 331a66dc982e6848d50e2c56332b615797f3c946 Mon Sep 17 00:00:00 2001
+From 810a011f3e94aa6fae173b71ca8b313ab51b17c2 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:40:09 +0800
-Subject: [PATCH 04/17] win32: fix file parentdir access
+Subject: [PATCH 04/18] win32: fix file parentdir access
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/files.c b/src/files.c
-index a8a37cc..f93acc0 100644
+index 0cc8b9b..8ad023f 100644
 --- a/src/files.c
 +++ b/src/files.c
-@@ -370,7 +370,7 @@ bool has_valid_path(const char *filename)
+@@ -365,7 +365,7 @@ bool has_valid_path(const char *filename)
  			statusline(ALERT, _("Path '%s': %s"), parentdir, strerror(errno));
  	} else if (!S_ISDIR(parentinfo.st_mode))
  		statusline(ALERT, _("Path '%s' is not a directory"), parentdir);

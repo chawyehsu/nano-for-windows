@@ -1,7 +1,7 @@
-From 2e19243b8bc2a75dbbd8b03a4c7690e804ca0da3 Mon Sep 17 00:00:00 2001
+From 5229a1c173ffb22947e3944bf4c8a6c80409e9c0 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Sat, 18 Apr 2026 14:47:12 +0800
-Subject: [PATCH 15/17] win32: poshistory item windows path compat
+Subject: [PATCH 15/18] win32: poshistory item windows path compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 11 insertions(+)
 
 diff --git a/src/history.c b/src/history.c
-index cf5451d..5034cb9 100644
+index 8914046..37f80c7 100644
 --- a/src/history.c
 +++ b/src/history.c
 @@ -23,6 +23,7 @@
@@ -20,7 +20,7 @@ index cf5451d..5034cb9 100644
  #include <errno.h>
  #include <string.h>
  
-@@ -414,6 +415,16 @@ void load_positions_register(void)
+@@ -415,6 +416,16 @@ void load_positions_register(void)
  	while (count++ < 200 && (length = getline(&phrase, &dummy, registry)) > 1) {
  		normalize_slashes(phrase);
  		stanza = strchr(phrase, '/');

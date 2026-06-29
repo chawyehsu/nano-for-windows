@@ -1,7 +1,7 @@
-From 09f21949fd76b61f41015d03586bb4824c0d7ce7 Mon Sep 17 00:00:00 2001
+From bb9694557a22a4a935eaffb652afa9f7f47184fe Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:41:51 +0800
-Subject: [PATCH 07/17] win32: file io to binary mode
+Subject: [PATCH 07/18] win32: file io to binary mode
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 5 insertions(+)
 
 diff --git a/src/nano.c b/src/nano.c
-index 3a7e47c..6fc3e20 100644
+index 59f2074..2288494 100644
 --- a/src/nano.c
 +++ b/src/nano.c
-@@ -1842,6 +1842,11 @@ int main(int argc, char **argv)
+@@ -1830,6 +1830,11 @@ int main(int argc, char **argv)
  		{NULL, 0, NULL, 0}
  	};
  

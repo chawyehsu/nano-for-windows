@@ -1,7 +1,7 @@
-From 0570efb587e8eb4bbea7abacc21c85a62a16cf20 Mon Sep 17 00:00:00 2001
+From 5023650f6ffebcf7538b4163522d3c7364428073 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:44:35 +0800
-Subject: [PATCH 16/17] win32: pdcursesmod ctrlv passthrough
+Subject: [PATCH 16/18] win32: pdcursesmod ctrlv passthrough
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 7 insertions(+)
 
 diff --git a/src/nano.c b/src/nano.c
-index b751566..a5bba98 100644
+index 805cb88..7bdfb64 100644
 --- a/src/nano.c
 +++ b/src/nano.c
-@@ -1851,6 +1851,13 @@ int main(int argc, char **argv)
+@@ -1839,6 +1839,13 @@ int main(int argc, char **argv)
  	 */
  	_set_fmode(_O_BINARY);
  

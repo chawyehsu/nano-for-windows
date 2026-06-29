@@ -1,7 +1,7 @@
-From efdc7fccac68495b76291b812972c4b8d6c2145a Mon Sep 17 00:00:00 2001
+From c1c36f04d6243d5f092918374bcb83bd29bf4243 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:48 +0800
-Subject: [PATCH 11/17] win32: keycode pdcursesmod compat
+Subject: [PATCH 11/18] win32: keycode pdcursesmod compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -11,7 +11,7 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  3 files changed, 65 insertions(+), 39 deletions(-)
 
 diff --git a/src/definitions.h b/src/definitions.h
-index 7fa372b..18cd28e 100644
+index 0a7728e..7dde3a0 100644
 --- a/src/definitions.h
 +++ b/src/definitions.h
 @@ -177,13 +177,13 @@
@@ -57,10 +57,10 @@ index 7fa372b..18cd28e 100644
  #define SHIFT_ALT_RIGHT  0x432
  #define SHIFT_ALT_UP     0x433
 diff --git a/src/global.c b/src/global.c
-index b93f035..8a6b985 100644
+index 06294f4..00c333a 100644
 --- a/src/global.c
 +++ b/src/global.c
-@@ -378,8 +378,28 @@ int keycode_from_string(const char *keystring)
+@@ -376,8 +376,28 @@ int keycode_from_string(const char *keystring)
  			return -1;
  	} else if (keystring[0] == 'M') {
  		if (keystring[1] == '-' && keystring[3] == '\0') {
@@ -91,7 +91,7 @@ index b93f035..8a6b985 100644
  			else
  				return keystring[2];
  		}
-@@ -1357,7 +1377,7 @@ void shortcut_init(void)
+@@ -1348,7 +1368,7 @@ void shortcut_init(void)
  	add_to_sclist(MMAIN, "M-;", 0, run_macro, 0);
  	add_to_sclist(MMAIN, "M-U", 0, do_undo, 0);
  	add_to_sclist(MMAIN, "M-E", 0, do_redo, 0);
@@ -101,7 +101,7 @@ index b93f035..8a6b985 100644
  	add_to_sclist(MMAIN, "^Del", CONTROL_DELETE, chop_next_word, 0);
  	add_to_sclist(MMAIN, "M-Del", ALT_DELETE, zap_text, 0);
 diff --git a/src/winio.c b/src/winio.c
-index 42225df..7818a7b 100644
+index fde1524..0812267 100644
 --- a/src/winio.c
 +++ b/src/winio.c
 @@ -266,10 +266,13 @@ void read_keys_from(WINDOW *frame)
@@ -160,7 +160,7 @@ index 42225df..7818a7b 100644
  			return keycode;
  	} else if (escapes == 1) {
  		escapes = 0;
-@@ -1205,27 +1219,24 @@ int parse_kbinput(WINDOW *frame)
+@@ -1204,27 +1218,24 @@ int parse_kbinput(WINDOW *frame)
  		return FOREIGN_SEQUENCE;
  #endif
  
@@ -196,7 +196,7 @@ index 42225df..7818a7b 100644
  			switch (keycode) {
  				case KEY_UP:    return ALT_UP;
  				case KEY_DOWN:  return ALT_DOWN;
-@@ -1239,7 +1250,7 @@ int parse_kbinput(WINDOW *frame)
+@@ -1238,7 +1249,7 @@ int parse_kbinput(WINDOW *frame)
  		}
  #endif
  		/* Is Ctrl being held? */
@@ -205,7 +205,7 @@ index 42225df..7818a7b 100644
  			switch (keycode) {
  				case KEY_UP:    return CONTROL_UP;
  				case KEY_DOWN:  return CONTROL_DOWN;
-@@ -1249,10 +1260,12 @@ int parse_kbinput(WINDOW *frame)
+@@ -1248,10 +1259,12 @@ int parse_kbinput(WINDOW *frame)
  				case KEY_END:   return CONTROL_END;
  				case KEY_DC:    return CONTROL_DELETE;
  			}
@@ -219,7 +219,7 @@ index 42225df..7818a7b 100644
  			switch (keycode) {
  				case KEY_UP:    return KEY_PPAGE;
  				case KEY_DOWN:  return KEY_NPAGE;
-@@ -1262,7 +1275,6 @@ int parse_kbinput(WINDOW *frame)
+@@ -1261,7 +1274,6 @@ int parse_kbinput(WINDOW *frame)
  		}
  #endif
  	}

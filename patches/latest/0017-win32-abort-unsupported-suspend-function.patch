@@ -1,7 +1,7 @@
-From fc631e644bb5cb1b3776b0641f66063fc8615c45 Mon Sep 17 00:00:00 2001
+From 746d7e7809c8512db226ae6b751f07d53d692d6d Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Sun, 10 May 2026 14:51:25 +0800
-Subject: [PATCH 17/17] win32: abort unsupported suspend function
+Subject: [PATCH 17/18] win32: abort unsupported suspend function
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 5 insertions(+)
 
 diff --git a/src/nano.c b/src/nano.c
-index a5bba98..b2c81f3 100644
+index 7bdfb64..df0a54e 100644
 --- a/src/nano.c
 +++ b/src/nano.c
-@@ -1003,6 +1003,11 @@ void do_suspend(void)
+@@ -992,6 +992,11 @@ void do_suspend(void)
  	if (in_restricted_mode())
  		return;
  

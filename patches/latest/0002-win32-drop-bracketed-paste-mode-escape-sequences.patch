@@ -1,7 +1,7 @@
-From eb8209dd9a26753709f5c832249425f8880da020 Mon Sep 17 00:00:00 2001
+From 68826d8274a1f1e950168b6bafd22c69908c2ea3 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:35:54 +0800
-Subject: [PATCH 02/17] win32: drop bracketed paste mode escape sequences
+Subject: [PATCH 02/18] win32: drop bracketed paste mode escape sequences
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -10,7 +10,7 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  2 files changed, 22 deletions(-)
 
 diff --git a/src/nano.c b/src/nano.c
-index 55feb92..3a7e47c 100644
+index 129ff78..59f2074 100644
 --- a/src/nano.c
 +++ b/src/nano.c
 @@ -230,10 +230,6 @@ void restore_terminal(void)
@@ -24,7 +24,7 @@ index 55feb92..3a7e47c 100644
  	tcsetattr(STDIN_FILENO, TCSANOW, &original_state);
  }
  
-@@ -1242,11 +1238,6 @@ void terminal_init(void)
+@@ -1230,11 +1226,6 @@ void terminal_init(void)
  
  	disable_kb_interrupt();
  
@@ -36,7 +36,7 @@ index 55feb92..3a7e47c 100644
  }
  
  /* Ask ncurses for a keycode, or assign a default one. */
-@@ -2496,9 +2487,6 @@ int main(int argc, char **argv)
+@@ -2484,9 +2475,6 @@ int main(int argc, char **argv)
  	shiftaltup = get_keycode("kUP4", SHIFT_ALT_UP);
  	shiftaltdown = get_keycode("kDN4", SHIFT_ALT_DOWN);
  
@@ -47,10 +47,10 @@ index 55feb92..3a7e47c 100644
  	mousefocusin = get_keycode("kxIN", FOCUS_IN);
  	mousefocusout = get_keycode("kxOUT", FOCUS_OUT);
 diff --git a/src/winio.c b/src/winio.c
-index bd48d85..9a2ae42 100644
+index f0bfffe..a4e91ce 100644
 --- a/src/winio.c
 +++ b/src/winio.c
-@@ -1532,11 +1532,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
+@@ -1531,11 +1531,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
  	if (!ISSET(RAW_SEQUENCES))
  		keypad(frame, FALSE);
  
@@ -62,7 +62,7 @@ index bd48d85..9a2ae42 100644
  
  	linger_after_escape = TRUE;
  
-@@ -1555,11 +1550,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
+@@ -1554,11 +1549,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
  
  	linger_after_escape = FALSE;
  

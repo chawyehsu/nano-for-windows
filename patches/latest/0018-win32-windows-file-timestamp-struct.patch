@@ -1,0 +1,30 @@
+From 99042a949b82a748a300014e3bbe90b45b656f31 Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Mon, 29 Jun 2026 19:38:12 +0800
+Subject: [PATCH 18/18] win32: windows file timestamp struct
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/files.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/files.c b/src/files.c
+index cb4cde7..2a21a4d 100644
+--- a/src/files.c
++++ b/src/files.c
+@@ -1659,8 +1659,10 @@ bool make_backup_of(char *realname, struct stat fileinfo)
+ 
+ 	/* Set the backup's timestamps to those of the original file.
+ 	 * Failure is unimportant: saving the file apparently worked. */
+-	filetimes[0] = fileinfo.st_atim;
+-	filetimes[1] = fileinfo.st_mtim;
++	filetimes[0].tv_sec = fileinfo.st_atime;
++	filetimes[0].tv_nsec = 0;
++	filetimes[1].tv_sec = fileinfo.st_mtime;
++	filetimes[1].tv_nsec = 0;
+ 	IGNORE_CALL_RESULT(futimens(descriptor, filetimes));
+ 
+ 	if (fclose(backup_file) == 0) {
+-- 
+2.54.0.windows.1
+

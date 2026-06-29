@@ -1,7 +1,7 @@
-From 385bdf9fc99c3f7a6adcf5601bcfaaecf13ec94f Mon Sep 17 00:00:00 2001
+From 53b972abc9c1744e45a16b94f53a726a18bf82f5 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 03:48:29 +0800
-Subject: [PATCH 14/17] win32: formatter and spell check support
+Subject: [PATCH 14/18] win32: formatter and spell check support
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 171 insertions(+), 2 deletions(-)
 
 diff --git a/src/text.c b/src/text.c
-index b8899da..e4bff6b 100644
+index 3180c36..094a741 100644
 --- a/src/text.c
 +++ b/src/text.c
-@@ -2237,6 +2237,172 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
+@@ -2228,6 +2228,172 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
  		statusline(REMARK, _("Finished checking spelling"));
  	else
  		statusline(REMARK, _("Buffer has been processed"));
@@ -185,7 +185,7 @@ index b8899da..e4bff6b 100644
  #endif
  }
  #endif /* ENABLE_SPELLER || ENABLE_FORMATTER */
-@@ -2572,8 +2738,11 @@ void do_spell(void)
+@@ -2571,8 +2737,11 @@ void do_spell(void)
  
  	if (alt_speller && *alt_speller)
  		treat(temp_name, alt_speller, TRUE);

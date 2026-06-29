@@ -1,7 +1,7 @@
-From 00f29cf8ab0ee10380a0ed5a492a3cd4d1328979 Mon Sep 17 00:00:00 2001
+From eb736090f7f861ecb1e38118663f846f4972b19b Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Sat, 18 Apr 2026 13:12:46 +0800
-Subject: [PATCH 05/17] win32: replace slashes and invalid filename chars
+Subject: [PATCH 05/18] win32: replace slashes and invalid filename chars
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -12,10 +12,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  4 files changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/src/files.c b/src/files.c
-index f93acc0..36f8c3a 100644
+index 8ad023f..4f1b46c 100644
 --- a/src/files.c
 +++ b/src/files.c
-@@ -1435,6 +1435,8 @@ char *get_full_path(const char *origpath)
+@@ -1393,6 +1393,8 @@ char *get_full_path(const char *origpath)
  
  	free(untilded);
  
@@ -24,7 +24,7 @@ index f93acc0..36f8c3a 100644
  	return target;
  }
  
-@@ -1477,6 +1479,7 @@ char *safe_tempfile(FILE **stream)
+@@ -1435,6 +1437,7 @@ char *safe_tempfile(FILE **stream)
  		tempdir = copy_of("/tmp/");
  
  	extension = strrchr(openfile->filename, '.');
@@ -32,7 +32,7 @@ index f93acc0..36f8c3a 100644
  
  	if (!extension || strchr(extension, '/'))
  		extension = openfile->filename + strlen(openfile->filename);
-@@ -1627,7 +1630,7 @@ bool make_backup_of(char *realname)
+@@ -1575,7 +1578,7 @@ bool make_backup_of(char *realname, struct stat fileinfo)
  		 * just use the file-name portion of the given path. */
  		if (thename) {
  			for (int i = 0; thename[i] != '\0'; i++)
@@ -41,7 +41,7 @@ index f93acc0..36f8c3a 100644
  					thename[i] = '!';
  		} else
  			thename = copy_of(tail(realname));
-@@ -2425,6 +2428,8 @@ char *real_dir_from_tilde(const char *path)
+@@ -2334,6 +2337,8 @@ char *expand_leading_tilde(const char *path)
  
  	free(tilded);
  
@@ -51,10 +51,10 @@ index f93acc0..36f8c3a 100644
  }
  
 diff --git a/src/history.c b/src/history.c
-index b1f245c..cf5451d 100644
+index 9160e39..8914046 100644
 --- a/src/history.c
 +++ b/src/history.c
-@@ -412,6 +412,7 @@ void load_positions_register(void)
+@@ -413,6 +413,7 @@ void load_positions_register(void)
  
  	/* Read and parse each line, and store the extracted data. */
  	while (count++ < 200 && (length = getline(&phrase, &dummy, registry)) > 1) {
@@ -63,10 +63,10 @@ index b1f245c..cf5451d 100644
  		length -= (stanza ? stanza - phrase : 0);
  
 diff --git a/src/prototypes.h b/src/prototypes.h
-index 488a686..8553779 100644
+index 18cd3eb..f09a1c3 100644
 --- a/src/prototypes.h
 +++ b/src/prototypes.h
-@@ -558,6 +558,7 @@ void complete_a_word(void);
+@@ -556,6 +556,7 @@ void complete_a_word(void);
  /* All functions in utils.c. */
  void get_homedir(void);
  const char *tail(const char *path);
@@ -75,7 +75,7 @@ index 488a686..8553779 100644
  int digits(ssize_t n);
  bool parse_num(const char *str, ssize_t *result);
 diff --git a/src/utils.c b/src/utils.c
-index f061b5a..84df35c 100644
+index fd74390..004ff95 100644
 --- a/src/utils.c
 +++ b/src/utils.c
 @@ -62,6 +62,17 @@ const char *tail(const char *path)
