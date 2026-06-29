@@ -62,6 +62,10 @@ pixi run setup
 pixi run build
 # Make new patches to the source code, then rebuild
 pixi run rebuild
+# Collect and update patches
+# jj describe "win32: ..."
+# git format-patch [--start-number M] -N HEAD
+# mv *.patch patches/latest/
 ```
 
 ## Knowledge
