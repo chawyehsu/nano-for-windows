@@ -1,0 +1,5 @@
+{
+  "clangd.fallbackFlags": [
+    "-I${env:CONDA_PREFIX}/Library/include"
+  ]
+}
