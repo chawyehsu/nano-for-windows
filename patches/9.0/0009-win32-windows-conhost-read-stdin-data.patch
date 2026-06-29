@@ -9,10 +9,10 @@ Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/src/nano.c b/src/nano.c
-index 4681f2a..320c427 100644
+index c11048e..72c25f4 100644
 --- a/src/nano.c
 +++ b/src/nano.c
-@@ -835,7 +835,7 @@ void restore_handler_for_Ctrl_C(void)
+@@ -845,7 +845,7 @@ void restore_handler_for_Ctrl_C(void)
  /* Reconnect standard input to the tty, and store its state. */
  void reconnect_and_store_state(void)
  {
@@ -21,7 +21,7 @@ index 4681f2a..320c427 100644
  
  	if (thetty < 0 || dup2(thetty, STDIN_FILENO) < 0)
  		die(_("Could not reconnect stdin to keyboard\n"));
-@@ -851,17 +851,21 @@ void reconnect_and_store_state(void)
+@@ -861,18 +861,22 @@ void reconnect_and_store_state(void)
  bool scoop_stdin(void)
  {
  	FILE *stream;
@@ -31,12 +31,13 @@ index 4681f2a..320c427 100644
  
  	/* When input comes from a terminal, show a helpful message. */
  	if (isatty(STDIN_FILENO))
--		fprintf(stderr, _("Reading data from keyboard; type ^D or ^D^D to finish.\n"));
-+		fprintf(stderr, _("Reading data from keyboard; type a ^Z line to finish.\n"));
+ 		fprintf(stderr, _("Reading data from keyboard; "
+-							"type ^D or ^D^D to finish.\n"));
++							"type a ^Z line to finish.\n"));
  
  	/* Open standard input. */
 -	stream = fopen("/dev/stdin", "rb");
-+	fd = dup(STDIN_FILENO);
++	fd = dup(0);
 +	stream = fdopen(fd, "rb");
  	if (stream == NULL) {
  		int errnumber = errno;

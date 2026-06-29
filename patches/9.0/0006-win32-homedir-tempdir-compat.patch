@@ -46,7 +46,7 @@ index 84df35c..ad14c79 100644
 +		if (homenv == NULL || *homenv == '\0')
 +			homenv = getenv("USERPROFILE");
  
--			if (userage)
+-			if (userage != NULL)
 -				homenv = userage->pw_dir;
 -		}
 -#endif
@@ -54,7 +54,7 @@ index 84df35c..ad14c79 100644
 +			homenv = getenv("ALLUSERSPROFILE");
  
  		/* Only set `homedir` if a home directory could be determined. */
- 		if (homenv && *homenv)
+ 		if (homenv != NULL && *homenv != '\0')
 -- 
 2.54.0.windows.1
 

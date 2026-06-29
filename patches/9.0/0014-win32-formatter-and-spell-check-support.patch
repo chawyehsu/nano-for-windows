@@ -190,9 +190,9 @@ index b8899da..e4bff6b 100644
  	if (alt_speller && *alt_speller)
  		treat(temp_name, alt_speller, TRUE);
 -	else
--		spell_check(temp_name);
+-		do_int_speller(temp_name);
 +	else {
-+		// spell_check(temp_name);
++		// do_int_speller(temp_name);
 +		statusline(ALERT, _("Internal spell checker is not supported in this build"));
 +		return;
 +	}

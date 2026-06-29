@@ -1,0 +1,29 @@
+From fc631e644bb5cb1b3776b0641f66063fc8615c45 Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Sun, 10 May 2026 14:51:25 +0800
+Subject: [PATCH 17/17] win32: abort unsupported suspend function
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/nano.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/nano.c b/src/nano.c
+index a5bba98..b2c81f3 100644
+--- a/src/nano.c
++++ b/src/nano.c
+@@ -1003,6 +1003,11 @@ void do_suspend(void)
+ 	if (in_restricted_mode())
+ 		return;
+ 
++#if !defined(SIGTSTP)
++	statusline(AHEM, _("Suspension is not supported in this build"));
++	return;
++#endif
++
+ 	suspend_nano(0);
+ 
+ 	ran_a_tool = TRUE;
+-- 
+2.54.0.windows.1
+

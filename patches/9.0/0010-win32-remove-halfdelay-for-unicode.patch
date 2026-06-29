@@ -1,0 +1,27 @@
+From abfc670014e0854c8d37786460061b4072a603f2 Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:43:34 +0800
+Subject: [PATCH 10/17] win32: remove halfdelay for unicode
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/winio.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/winio.c b/src/winio.c
+index 7967390..42225df 100644
+--- a/src/winio.c
++++ b/src/winio.c
+@@ -213,9 +213,6 @@ void read_keys_from(WINDOW *frame)
+ 						lastmessage > HUSH && lastmessage < ALERT &&
+ 						lastmessage != INFO) || spotlighted)) {
+ 		timed = TRUE;
+-		halfdelay(ISSET(QUICK_BLANK) ? 8 : 15);
+-		/* Counteract a side effect of half-delay mode. */
+-		disable_kb_interrupt();
+ 	}
+ #endif
+ 
+-- 
+2.54.0.windows.1
+

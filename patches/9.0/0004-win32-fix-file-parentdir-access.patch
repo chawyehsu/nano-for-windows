@@ -16,8 +16,8 @@ index a8a37cc..f93acc0 100644
  			statusline(ALERT, _("Path '%s': %s"), parentdir, strerror(errno));
  	} else if (!S_ISDIR(parentinfo.st_mode))
  		statusline(ALERT, _("Path '%s' is not a directory"), parentdir);
--	else if (access(parentdir, X_OK) < 0)
-+	else if (access(parentdir, R_OK) < 0)
+-	else if (access(parentdir, X_OK) == -1)
++	else if (access(parentdir, R_OK) == -1)
  		statusline(ALERT, _("Path '%s' is not accessible"), parentdir);
  #ifndef NANO_TINY
  	else if (ISSET(LOCKING) && !ISSET(VIEW_MODE) && access(parentdir, W_OK) < 0)

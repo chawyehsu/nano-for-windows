@@ -1,0 +1,88 @@
+From 275effc4827614c019e9c3f45a9da8644970ea1d Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:42:53 +0800
+Subject: [PATCH 08/17] win32: utf8 support and detect wide char width
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/chars.c | 7 ++++---
+ src/nano.c  | 2 +-
+ src/winio.c | 3 ++-
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/src/chars.c b/src/chars.c
+index e6b5783..3fad6fb 100644
+--- a/src/chars.c
++++ b/src/chars.c
+@@ -20,6 +20,7 @@
+  **************************************************************************/
+ 
+ #include "prototypes.h"
++#include "uniwidth.h"
+ 
+ #include <ctype.h>
+ #include <string.h>
+@@ -219,7 +220,7 @@ bool is_doublewidth(const char *ch)
+ 	if (mbtowide(&wc, ch) < 0)
+ 		return FALSE;
+ 
+-	return (wcwidth(wc) == 2);
++	return (uc_width(wc, "UTF-8") == 2);
+ }
+ 
+ /* Return TRUE when the given character occupies zero cells. */
+@@ -240,7 +241,7 @@ bool is_zerowidth(const char *ch)
+ 		return FALSE;
+ #endif
+ 
+-	return (wcwidth(wc) == 0);
++	return (uc_width(wc, "UTF-8") == 0);
+ }
+ #endif /* ENABLE_UTF8 */
+ 
+@@ -325,7 +326,7 @@ int advance_over(const char *string, size_t *column)
+ 				return 1;
+ 			}
+ 
+-			int width = wcwidth(wc);
++			int width = uc_width(wc, "UTF-8");
+ 
+ #if defined(__OpenBSD__)
+ 			*column += (width < 0 || wc >= 0xF0000) ? 1 : width;
+diff --git a/src/nano.c b/src/nano.c
+index 6fc3e20..c11048e 100644
+--- a/src/nano.c
++++ b/src/nano.c
+@@ -1867,7 +1867,7 @@ int main(int argc, char **argv)
+ #ifdef ENABLE_UTF8
+ 	/* If setting the locale is successful and it uses UTF-8, we will
+ 	 * need to use the multibyte functions for text processing. */
+-	if (setlocale(LC_ALL, "") && strcmp(nl_langinfo(CODESET), "UTF-8") == 0)
++	setlocale(LC_ALL, "");
+ 		using_utf8 = TRUE;
+ #else
+ 	setlocale(LC_ALL, "");
+diff --git a/src/winio.c b/src/winio.c
+index 9a2ae42..7967390 100644
+--- a/src/winio.c
++++ b/src/winio.c
+@@ -21,6 +21,7 @@
+ 
+ #include "prototypes.h"
+ #include "revision.h"
++#include "uniwidth.h"
+ 
+ #include <ctype.h>
+ #ifdef __linux__
+@@ -1902,7 +1903,7 @@ char *display_string(const char *text, size_t column, size_t span,
+ 		}
+ 
+ 		/* Determine whether the character takes zero, one, or two columns. */
+-		charwidth = wcwidth(wc);
++		charwidth = uc_width(wc, "UTF-8");
+ 
+ 		/* Watch the number of zero-widths, to keep ample memory reserved. */
+ 		if (charwidth == 0 && --stowaways == 0) {
+-- 
+2.54.0.windows.1
+

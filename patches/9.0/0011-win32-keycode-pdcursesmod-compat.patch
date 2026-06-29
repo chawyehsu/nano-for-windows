@@ -1,0 +1,232 @@
+From efdc7fccac68495b76291b812972c4b8d6c2145a Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:43:48 +0800
+Subject: [PATCH 11/17] win32: keycode pdcursesmod compat
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/definitions.h | 28 +++++++++++---------------
+ src/global.c      | 26 +++++++++++++++++++++---
+ src/winio.c       | 50 +++++++++++++++++++++++++++++------------------
+ 3 files changed, 65 insertions(+), 39 deletions(-)
+
+diff --git a/src/definitions.h b/src/definitions.h
+index 7fa372b..18cd28e 100644
+--- a/src/definitions.h
++++ b/src/definitions.h
+@@ -177,13 +177,13 @@
+ #define DEL_CODE  0x7F
+ 
+ /* Codes for "modified" Arrow keys, beyond KEY_MAX of ncurses. */
+-#define CONTROL_LEFT    0x401
+-#define CONTROL_RIGHT   0x402
+-#define CONTROL_UP      0x403
+-#define CONTROL_DOWN    0x404
+-#define CONTROL_HOME    0x405
+-#define CONTROL_END     0x406
+-#define CONTROL_DELETE  0x40D
++#define CONTROL_LEFT    CTL_LEFT
++#define CONTROL_RIGHT   CTL_RIGHT
++#define CONTROL_UP      CTL_UP
++#define CONTROL_DOWN    CTL_DOWN
++#define CONTROL_HOME    CTL_HOME
++#define CONTROL_END     CTL_END
++#define CONTROL_DELETE  CTL_DEL
+ #define SHIFT_CONTROL_LEFT    0x411
+ #define SHIFT_CONTROL_RIGHT   0x412
+ #define SHIFT_CONTROL_UP      0x413
+@@ -191,16 +191,10 @@
+ #define SHIFT_CONTROL_HOME    0x415
+ #define SHIFT_CONTROL_END     0x416
+ #define CONTROL_SHIFT_DELETE  0x41D
+-#define ALT_LEFT      0x421
+-#define ALT_RIGHT     0x422
+-#define ALT_UP        0x423
+-#define ALT_DOWN      0x424
+-#define ALT_HOME      0x425
+-#define ALT_END       0x426
+-#define ALT_PAGEUP    0x427
+-#define ALT_PAGEDOWN  0x428
+-#define ALT_INSERT    0x42C
+-#define ALT_DELETE    0x42D
++#define ALT_PAGEUP    ALT_PGUP
++#define ALT_PAGEDOWN  ALT_PGDN
++#define ALT_INSERT    ALT_INS
++#define ALT_DELETE    ALT_DEL
+ #define SHIFT_ALT_LEFT   0x431
+ #define SHIFT_ALT_RIGHT  0x432
+ #define SHIFT_ALT_UP     0x433
+diff --git a/src/global.c b/src/global.c
+index b93f035..8a6b985 100644
+--- a/src/global.c
++++ b/src/global.c
+@@ -378,8 +378,28 @@ int keycode_from_string(const char *keystring)
+ 			return -1;
+ 	} else if (keystring[0] == 'M') {
+ 		if (keystring[1] == '-' && keystring[3] == '\0') {
+-			if ('A' <= keystring[2] && keystring[2] <= 'Z')
+-				return (keystring[2] | 0x20);
++			if (keystring[2] == ',')
++				return ALT_COMMA;
++			else if (keystring[2] == '-')
++				return ALT_MINUS;
++			else if (keystring[2] == '.')
++				return ALT_STOP;
++			else if (keystring[2] == '/')
++				return ALT_FSLASH;
++			else if ('0' <= keystring[2] && keystring[2] <= '9')
++				return keystring[2] + ALT_0 - '0';
++			else if (keystring[2] == ';')
++				return ALT_SEMICOLON;
++			else if (keystring[2] == '=')
++				return ALT_EQUAL;
++			else if ('A' <= (keystring[2] & 0x5F) && (keystring[2] & 0x5F) <= 'Z')
++				return (keystring[2] & 0x5F) + ALT_A - 'A';
++			else if (keystring[2] == '[')
++				return ALT_LBRACKET;
++			else if (keystring[2] == '\\')
++				return ALT_BSLASH;
++			else if (keystring[2] == ']')
++				return ALT_RBRACKET;
+ 			else
+ 				return keystring[2];
+ 		}
+@@ -1357,7 +1377,7 @@ void shortcut_init(void)
+ 	add_to_sclist(MMAIN, "M-;", 0, run_macro, 0);
+ 	add_to_sclist(MMAIN, "M-U", 0, do_undo, 0);
+ 	add_to_sclist(MMAIN, "M-E", 0, do_redo, 0);
+-	add_to_sclist(MMAIN, "M-Bsp", CONTROL_SHIFT_DELETE, chop_previous_word, 0);
++	add_to_sclist(MMAIN, "M-Bsp", ALT_BKSP, chop_previous_word, 0);
+ 	add_to_sclist(MMAIN, "Sh-^Del", CONTROL_SHIFT_DELETE, chop_previous_word, 0);
+ 	add_to_sclist(MMAIN, "^Del", CONTROL_DELETE, chop_next_word, 0);
+ 	add_to_sclist(MMAIN, "M-Del", ALT_DELETE, zap_text, 0);
+diff --git a/src/winio.c b/src/winio.c
+index 42225df..7818a7b 100644
+--- a/src/winio.c
++++ b/src/winio.c
+@@ -266,10 +266,13 @@ void read_keys_from(WINDOW *frame)
+ 	if (!key_buffer)
+ 		reserve_space_for(capacity);
+ 
+-	key_buffer[0] = input;
+-
+ 	nextcodes = key_buffer;
+-	waiting_codes = 1;
++	waiting_codes = 0;
++
++	if (GetAsyncKeyState(VK_LMENU) < 0)
++		key_buffer[waiting_codes++] = ESC_CODE;
++
++	key_buffer[waiting_codes++] = input;
+ 
+ #ifndef NANO_TINY
+ 	/* Cancel the highlighting of a search match, if there still is one. */
+@@ -306,9 +309,12 @@ void read_keys_from(WINDOW *frame)
+ 			break;
+ 
+ 		/* When the keystroke buffer is full, extend it. */
+-		if (waiting_codes == capacity)
++		if (waiting_codes + 1 == capacity)
+ 			reserve_space_for(2 * capacity);
+ 
++		if (GetAsyncKeyState(VK_LMENU) < 0)
++			key_buffer[waiting_codes++] = ESC_CODE;
++
+ 		key_buffer[waiting_codes++] = input;
+ 	}
+ 
+@@ -1020,6 +1026,7 @@ int parse_kbinput(WINDOW *frame)
+ 
+ 	/* Get one code from the input stream. */
+ 	keycode = get_input(frame);
++	unsigned long modifiers = PDC_get_key_modifiers();
+ 
+ 	/* For an Esc, remember whether the last two arrived by themselves.
+ 	 * Then increment the counter, rolling around on three escapes. */
+@@ -1036,8 +1043,15 @@ int parse_kbinput(WINDOW *frame)
+ 		return ERR;
+ 
+ 	if (escapes == 0) {
++		/* Diambiguate some control keystrokes: ^H|BACKSPACE, ^M|ENTER */
++		if (!(modifiers & PDC_KEY_MODIFIER_CONTROL)) {
++			switch (keycode) {
++				case '\b': return KEY_BACKSPACE;
++				case '\r': return KEY_ENTER;
++			}
++		}
+ 		/* Most key codes in byte range cannot be special keys. */
+-		if (keycode < 0xFF && keycode != '\t' && keycode != DEL_CODE)
++		if (!modifiers && keycode < 0xFF && keycode != '\t' && keycode != DEL_CODE)
+ 			return keycode;
+ 	} else if (escapes == 1) {
+ 		escapes = 0;
+@@ -1205,27 +1219,24 @@ int parse_kbinput(WINDOW *frame)
+ 		return FOREIGN_SEQUENCE;
+ #endif
+ 
+-#ifdef __linux__
+-	/* When not running under X, check for the bare arrow keys whether
+-	 * Shift/Ctrl/Alt are being held together with them. */
+-	unsigned char modifiers = 6;
+-
+ 	/* Modifiers are: Alt (8), Ctrl (4), Shift (1). */
+-	if (on_a_vt && !mute_modifiers && ioctl(0, TIOCLINUX, &modifiers) >= 0) {
++	if (!mute_modifiers) {
+ #ifndef NANO_TINY
+ 		/* Is Shift being held? */
+-		if (modifiers & 0x01) {
++		if (modifiers & PDC_KEY_MODIFIER_SHIFT) {
+ 			if (keycode == '\t')
+ 				return SHIFT_TAB;
+-			if (keycode == KEY_DC && modifiers == 0x01)
++			if (keycode == KEY_SDC && modifiers == PDC_KEY_MODIFIER_SHIFT)
+ 				return SHIFT_DELETE;
+-			if (keycode == KEY_DC && modifiers == 0x05)
++			if (keycode == KEY_SDC && modifiers & PDC_KEY_MODIFIER_CONTROL)
+ 				return CONTROL_SHIFT_DELETE;
+-			if (!meta_key)
++			if (modifiers == (PDC_KEY_MODIFIER_SHIFT | PDC_KEY_MODIFIER_CONTROL))
++				keycode = convert_to_control(keycode);
++			if (!meta_key && !(modifiers & PDC_KEY_MODIFIER_CONTROL))
+ 				shift_held = TRUE;
+ 		}
+ 		/* Is only Alt being held? */
+-		if (modifiers == 0x08) {
++		if (modifiers == PDC_KEY_MODIFIER_ALT) {
+ 			switch (keycode) {
+ 				case KEY_UP:    return ALT_UP;
+ 				case KEY_DOWN:  return ALT_DOWN;
+@@ -1239,7 +1250,7 @@ int parse_kbinput(WINDOW *frame)
+ 		}
+ #endif
+ 		/* Is Ctrl being held? */
+-		if (modifiers & 0x04) {
++		if (modifiers & PDC_KEY_MODIFIER_CONTROL) {
+ 			switch (keycode) {
+ 				case KEY_UP:    return CONTROL_UP;
+ 				case KEY_DOWN:  return CONTROL_DOWN;
+@@ -1249,10 +1260,12 @@ int parse_kbinput(WINDOW *frame)
+ 				case KEY_END:   return CONTROL_END;
+ 				case KEY_DC:    return CONTROL_DELETE;
+ 			}
++			if (modifiers == PDC_KEY_MODIFIER_CONTROL)
++				keycode = convert_to_control(keycode);
+ 		}
+ #ifndef NANO_TINY
+ 		/* Are both Shift and Alt being held? */
+-		if ((modifiers & 0x09) == 0x09) {
++		if (modifiers == (PDC_KEY_MODIFIER_SHIFT | PDC_KEY_MODIFIER_ALT)) {
+ 			switch (keycode) {
+ 				case KEY_UP:    return KEY_PPAGE;
+ 				case KEY_DOWN:  return KEY_NPAGE;
+@@ -1262,7 +1275,6 @@ int parse_kbinput(WINDOW *frame)
+ 		}
+ #endif
+ 	}
+-#endif /* __linux__ */
+ 
+ 	/* Spurious codes from VTE -- see https://sv.gnu.org/bugs/?64578. */
+ 	if (keycode == mousefocusin || keycode == mousefocusout)
+-- 
+2.54.0.windows.1
+
