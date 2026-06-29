@@ -51,7 +51,7 @@ Then run `nano --version` to verify the installation.
 
 ## Development
 
-Prerequisites: Git, [pixi], [Jujutsu]
+Prerequisites: PowerShell, Git, [pixi], [Jujutsu]
 
 ```shell
 jj git clone https://github.com/chawyehsu/nano-for-windows
