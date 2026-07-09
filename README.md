@@ -30,6 +30,14 @@
 
 ### Install
 
+#### Winget
+
+```console
+winget install chawyehsu.nano
+```
+
+#### Conda
+
 Pre-built artifacts of **nano-for-windows** are available on chawyehsu's conda
 channel. You can install it with [pixi] or conda/mamba.
 
@@ -37,12 +45,16 @@ channel. You can install it with [pixi] or conda/mamba.
 pixi global install nano -c chawyehsu -c conda-forge
 ```
 
+#### Scoop
+
 Or you can install it with [Scoop](https://scoop.sh/):
 
 ```plain
 scoop bucket add dorado https://github.com/chawyehsu/dorado
 scoop install dorado/nano
 ```
+
+#### Manual
 
 Or you may download the pre-built artifact from [GitHub Releases], extract the
 files to a directory and add the `bin` directory to your `PATH` environment variable.
