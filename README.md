@@ -97,7 +97,7 @@ repo [chawyehsu/conda-recipes], build logs are also available there.
 
 - [Official build for Windows]
 - [lhmouse/nano-win]
-- [okibcn/nano-for-windows]
+- [okibcn/nano-for-windows] (_[what's the difference]_)
 
 ## License
 
@@ -113,3 +113,4 @@ repo [chawyehsu/conda-recipes], build logs are also available there.
 [Official build for Windows]: https://www.nano-editor.org/dist/win32-support/
 [lhmouse/nano-win]: https://github.com/lhmouse/nano-win
 [okibcn/nano-for-windows]: https://github.com/okibcn/nano-for-windows
+[what's the difference]: https://github.com/okibcn/nano-for-windows/issues/40#issuecomment-4343354155
