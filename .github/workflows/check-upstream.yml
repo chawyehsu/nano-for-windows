@@ -1,0 +1,24 @@
+name: Check Upstream Release
+# Check for new GNU nano releases on the official website and open an issue if a newer version exists
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *' # every day at 12:00 UTC
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Run
+        run: ./.github/scripts/check-upstream.ps1
+        env:
+          GH_TOKEN: ${{ github.token }}
