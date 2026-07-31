@@ -7,6 +7,8 @@ $ProgressPreference = "SilentlyContinue"
 $TarCommand = if ($IsLinux) { 'bsdtar' } else { 'tar' }
 $CACHE_DIR = "$PSScriptRoot/../../.cache"
 $REUPLOAD_PLATFORMS = @('win-64', 'win-arm64')
+$ISSUE_LABEL = "upstream-release"
+$ISSUE_TITLE_REGEX = '^GNU nano ([\d.]+) released upstream$'
 
 function Get-NanoCondaLatestReleases {
     if (-not (Get-Command 'pixi' -ErrorAction SilentlyContinue)) {
@@ -242,6 +244,61 @@ function Convert-CondaAssetToZip {
     }
 }
 
+function Test-VersionEqual {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Left,
+        [Parameter(Mandatory = $true)]
+        [string]$Right
+    )
+
+    $leftParts = @($Left -split '\.')
+    $rightParts = @($Right -split '\.')
+    $count = [Math]::Max($leftParts.Count, $rightParts.Count)
+    while ($leftParts.Count -lt $count) { $leftParts += '0' }
+    while ($rightParts.Count -lt $count) { $rightParts += '0' }
+    return ([version]($leftParts -join '.')) -eq ([version]($rightParts -join '.'))
+}
+
+function Invoke-CloseReleaseTrackingIssue {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Version,
+        [Parameter(Mandatory = $true)]
+        [string]$ReleaseTag
+    )
+
+    $cleanVersion = $Version -replace '-.*$', ''
+
+    Write-Host "Closing release-tracking issues for version $cleanVersion..." -ForegroundColor Cyan
+
+    $issues = $(gh issue list --label $ISSUE_LABEL --state open --json number,title) | ConvertFrom-Json
+    $matchedIssues = $issues | Where-Object {
+        $_.title -match $ISSUE_TITLE_REGEX -and (Test-VersionEqual -Left $Matches[1] -Right $cleanVersion)
+    }
+
+    if (-not $matchedIssues) {
+        Write-Host "No open release-tracking issue for version $cleanVersion." -ForegroundColor Gray
+        return
+    }
+
+    foreach ($issue in @($matchedIssues)) {
+        if ($env:CI) {
+            try {
+                gh issue comment $issue.number --body "Now available as GitHub release [$ReleaseTag](https://github.com/chawyehsu/nano-for-windows/releases/tag/$ReleaseTag)."
+                gh issue close $issue.number
+                Write-Host "Closed issue #$($issue.number): $($issue.title)" -ForegroundColor Green
+            } catch {
+                Write-Host "Failed to close release-tracking issue #$($issue.number)" -ForegroundColor Red
+                Write-Host $_.Exception.Message -ForegroundColor Red
+                exit 1
+            }
+        } else {
+            Write-Host "Dry run: issue #$($issue.number) '$($issue.title)' would be closed with comment referencing $ReleaseTag" -ForegroundColor Gray
+        }
+    }
+}
+
 ## Main script logic
 if (-not (Get-Command $TarCommand -ErrorAction SilentlyContinue)) {
     Write-Host "$TarCommand command is not available." -ForegroundColor Red
@@ -347,6 +404,8 @@ if ($assetPaths.Count -eq $REUPLOAD_PLATFORMS.Count) {
         Write-Host "Dry run: GitHub release $releaseTag would be created with assets:" -ForegroundColor Gray
         $allAssetPaths | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
     }
+
+    Invoke-CloseReleaseTrackingIssue -Version $CondaVersion -ReleaseTag $releaseTag
 } else {
     Write-Host "Not all assets were downloaded successfully. Expected: $($REUPLOAD_PLATFORMS.Count), Downloaded: $($assetPaths.Count)" -ForegroundColor Red
     exit 1
