@@ -56,16 +56,19 @@ function Test-IssueExistsForVersion {
 function New-UpstreamReleaseIssue {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$Version
+        [string]$Version,
+        [Parameter(Mandatory = $true)]
+        [string]$GitHubVersion
     )
 
     $title = "GNU nano $Version released upstream"
     $body = @"
 GNU nano **$Version** has been released on [nano-editor.org]($UPSTREAM_NEWS_URL).
 
-The current latest GitHub release is still on an older version. Please update the conda recipe and trigger a new release.
+The current latest GitHub release **$GitHubVersion** is outdated. Please update the conda recipe and trigger a new release.
 
 - Upstream NEWS: https://www.nano-editor.org/news.php
+- Diff: https://github.com/ahjragaas/nano/compare/v$GitHubVersion...v$Version
 "@
 
     if ($env:CI) {
@@ -85,6 +88,7 @@ Write-Host "Checking for upstream GNU nano releases..." -ForegroundColor Cyan
 
 $upstreamVersion = Get-LatestUpstreamNanoVersion
 $githubVersion = Get-GitHubLatestReleaseVersion
+$cleanGitHubVersion = $githubVersion -replace '^v(.*?)(:?-.*)$', '$1'
 
 Write-Host "Upstream version: $upstreamVersion" -ForegroundColor Cyan
 Write-Host "GitHub version:   $githubVersion" -ForegroundColor Cyan
@@ -94,7 +98,7 @@ if (-not $githubVersion) {
     exit 0
 }
 
-if ([version]$upstreamVersion -le [version]$githubVersion) {
+if ([version]$upstreamVersion -le [version]$cleanGitHubVersion) {
     Write-Host "GitHub release is up to date." -ForegroundColor Green
     exit 0
 }
@@ -107,4 +111,4 @@ if (Test-IssueExistsForVersion -Version $upstreamVersion) {
 }
 
 Write-Host "Creating issue for upstream release $upstreamVersion..." -ForegroundColor Cyan
-New-UpstreamReleaseIssue -Version $upstreamVersion
+New-UpstreamReleaseIssue -Version $upstreamVersion -GitHubVersion $cleanGitHubVersion
