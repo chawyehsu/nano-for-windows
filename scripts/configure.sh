@@ -16,10 +16,10 @@ ostype="$(uname -s)"
 LIBRARY_PREFIX="$(echo "${CONDA_PREFIX}" | tr '\\' '/')"
 
 if [[ "${ostype}" =~ MSYS_NT-* ]]; then
-    export CFLAGS="${CFLAGS:-} -DPDC_FORCE_UTF8 -DPDC_NCMOUSE"
     export LDFLAGS="${LDFLAGS:-} -L$LIBRARY_PREFIX/lib -static"
-    export NCURSESW_CFLAGS="-I$LIBRARY_PREFIX/include -DNCURSES_STATIC -DENABLE_MOUSE"
-    export NCURSESW_LIBS="-l:pdcurses.a -lwinmm"
+    # `PDC_NCMOUSE` to enable ncurses-compatible mode mouse API
+    export NCURSESW_CFLAGS="-I$LIBRARY_PREFIX/include -I$LIBRARY_PREFIX/include/pdcurses -DPDC_NCMOUSE"
+    export NCURSESW_LIBS="-lpdcurses -lwinmm"
 
     export HOST=x86_64-w64-mingw32
     export BUILD=x86_64-w64-mingw32
