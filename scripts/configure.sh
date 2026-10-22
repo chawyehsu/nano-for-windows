@@ -13,12 +13,12 @@ fi
 ostype="$(uname -s)"
 # convert backslashes to forward slashes for MSYS2
 # shellcheck disable=SC1003
-LIBRARY_PREFIX="$(echo "${CONDA_PREFIX}" | tr '\\' '/')"
+LIBRARY_PREFIX="$(echo "${CONDA_PREFIX}/Library" | tr '\\' '/')"
 
 if [[ "${ostype}" =~ MSYS_NT-* ]]; then
     export LDFLAGS="${LDFLAGS:-} -L$LIBRARY_PREFIX/lib -static"
-    # `PDC_NCMOUSE` to enable ncurses-compatible mode mouse API
-    export NCURSESW_CFLAGS="-I$LIBRARY_PREFIX/include -I$LIBRARY_PREFIX/include/pdcurses -DPDC_NCMOUSE"
+    # `-I$LIBRARY_PREFIX/include/pdcurses` is needed because nano includes <term.h>,
+    export NCURSESW_CFLAGS="-I$LIBRARY_PREFIX/include -I$LIBRARY_PREFIX/include/pdcurses -DPDC_NCMOUSE -DPDC_FORCE_UTF8"
     export NCURSESW_LIBS="-lpdcurses -lwinmm"
 
     export HOST=x86_64-w64-mingw32
