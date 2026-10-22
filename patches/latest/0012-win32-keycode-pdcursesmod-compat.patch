@@ -1,7 +1,7 @@
 From c1c36f04d6243d5f092918374bcb83bd29bf4243 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:43:48 +0800
-Subject: [PATCH 11/18] win32: keycode pdcursesmod compat
+Subject: [PATCH 12/19] win32: keycode pdcursesmod compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -229,4 +229,3 @@ index fde1524..0812267 100644
  		case KEY_SLEFT:
 -- 
 2.54.0.windows.1
-

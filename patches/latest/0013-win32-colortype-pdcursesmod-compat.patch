@@ -1,7 +1,7 @@
 From eb373509d736853658ce4382a9914c21683a3db9 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:44:02 +0800
-Subject: [PATCH 12/18] win32: colortype pdcursesmod compat
+Subject: [PATCH 13/19] win32: colortype pdcursesmod compat
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -142,4 +142,3 @@ index 0812267..47d4e3a 100644
  	/* Drop all waiting keystrokes upon any kind of "error". */
 -- 
 2.54.0.windows.1
-

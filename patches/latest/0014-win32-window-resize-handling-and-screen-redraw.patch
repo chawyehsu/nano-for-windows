@@ -1,7 +1,7 @@
 From 9601971aad19a18508786521834ae443e798ea03 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 03:48:29 +0800
-Subject: [PATCH 13/18] win32: window resize handling and screen redraw
+Subject: [PATCH 14/19] win32: window resize handling and screen redraw
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -28,4 +28,3 @@ index 47d4e3a..3d0e510 100644
  			input = THE_WINDOW_RESIZED;
 -- 
 2.54.0.windows.1
-

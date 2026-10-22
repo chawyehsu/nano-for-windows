@@ -1,7 +1,7 @@
 From 98854e6525c9100801d1cba72277fe6cc4bd5cfa Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:42:53 +0800
-Subject: [PATCH 08/18] win32: utf8 support and detect wide char width
+Subject: [PATCH 09/19] win32: utf8 support and detect wide char width
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -85,4 +85,3 @@ index a4e91ce..be75c74 100644
  		if (charwidth == 0 && --stowaways == 0) {
 -- 
 2.54.0.windows.1
-

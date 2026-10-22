@@ -1,7 +1,7 @@
 From 746d7e7809c8512db226ae6b751f07d53d692d6d Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Sun, 10 May 2026 14:51:25 +0800
-Subject: [PATCH 17/18] win32: abort unsupported suspend function
+Subject: [PATCH 18/19] win32: abort unsupported suspend function
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -26,4 +26,3 @@ index 7bdfb64..df0a54e 100644
  	ran_a_tool = TRUE;
 -- 
 2.54.0.windows.1
-

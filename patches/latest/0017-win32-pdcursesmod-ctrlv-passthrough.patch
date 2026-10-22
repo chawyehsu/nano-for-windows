@@ -1,7 +1,7 @@
 From 5023650f6ffebcf7538b4163522d3c7364428073 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:44:35 +0800
-Subject: [PATCH 16/18] win32: pdcursesmod ctrlv passthrough
+Subject: [PATCH 17/19] win32: pdcursesmod ctrlv passthrough
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -28,4 +28,3 @@ index 805cb88..7bdfb64 100644
  
 -- 
 2.54.0.windows.1
-

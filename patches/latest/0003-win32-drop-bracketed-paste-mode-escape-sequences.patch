@@ -1,7 +1,7 @@
 From 68826d8274a1f1e950168b6bafd22c69908c2ea3 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:35:54 +0800
-Subject: [PATCH 02/18] win32: drop bracketed paste mode escape sequences
+Subject: [PATCH 03/19] win32: drop bracketed paste mode escape sequences
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -78,4 +78,3 @@ index f0bfffe..a4e91ce 100644
  	 * keypad back on if necessary now that we're done. */
 -- 
 2.54.0.windows.1
-

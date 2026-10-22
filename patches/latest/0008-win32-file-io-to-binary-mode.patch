@@ -1,7 +1,7 @@
 From bb9694557a22a4a935eaffb652afa9f7f47184fe Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:41:51 +0800
-Subject: [PATCH 07/18] win32: file io to binary mode
+Subject: [PATCH 08/19] win32: file io to binary mode
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -26,4 +26,3 @@ index 59f2074..2288494 100644
  
 -- 
 2.54.0.windows.1
-

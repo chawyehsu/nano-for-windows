@@ -1,7 +1,7 @@
 From 810a011f3e94aa6fae173b71ca8b313ab51b17c2 Mon Sep 17 00:00:00 2001
 From: Chawye Hsu <su+git@chawyehsu.com>
 Date: Thu, 16 Apr 2026 00:40:09 +0800
-Subject: [PATCH 04/18] win32: fix file parentdir access
+Subject: [PATCH 05/19] win32: fix file parentdir access
 
 Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
 ---
@@ -23,4 +23,3 @@ index 0cc8b9b..8ad023f 100644
  	else if (ISSET(LOCKING) && !ISSET(VIEW_MODE) && access(parentdir, W_OK) < 0)
 -- 
 2.54.0.windows.1
-
