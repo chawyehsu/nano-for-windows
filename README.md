@@ -80,6 +80,47 @@ pixi run rebuild
 # mv *.patch patches/latest/
 ```
 
+### Renewing Patches with Coding Agents
+
+Patches live in `patches/` and are grouped by GNU nano version. When a new
+upstream release breaks them, `check-upstream.yml` opens a release-tracking issue
+with a link to the upstream diff. Renewing can be assisted by the
+[`renew-patches` skill](.agents/skills/renew-patches/SKILL.md), which is driven
+from an agent session rather than a script alone.
+
+Start from a clean working copy (`jj status`) with `gh`, `pixi` and `jj` available:
+
+```shell
+pixi install
+```
+
+Then ask the agent to renew the patches for the pending release, e.g.
+**_"Renew the patches using the renew-patches skill."_** It will:
+
+1. Read the open `upstream-release` issue and derive the old and new versions.
+2. Stop if `patches/<old-version>/` already exists, meaning that release was
+   already snapshotted.
+3. Snapshot `patches/latest/` verbatim into `patches/<old-version>/`.
+4. Fetch the upstream diff and slice it per patch.
+5. Repair each patch until a clean apply and build pass.
+
+Verification can be run independently at any time, in a throwaway `jj`
+workspace that never touches the current working copy:
+
+```shell
+# A frozen patch set
+pwsh -nop .agents/skills/renew-patches/scripts/verify-patches.ps1 -Version 9.2
+# The working set, built against a release
+pwsh -nop .agents/skills/renew-patches/scripts/verify-patches.ps1 -Version 9.3 -WorkingSet
+```
+
+Renewals are atomic and never invent patches: the tool never adds a patch file
+and never renumbers filenames, and it proposes deletions for you to decide
+rather than performing them. A renewal that cannot reach a green build restores
+the working set and reports what blocked it. Review the result with `jj diff`,
+edits are left uncommitted on purpose, and a report is written to
+`.cache/renew-<version>/report.md`.
+
 ## Knowledge
 
 GNU nano has been ported to Windows by different developers at different times.
