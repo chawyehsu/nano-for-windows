@@ -36,21 +36,23 @@ index 129ff78..59f2074 100644
  }
  
  /* Ask ncurses for a keycode, or assign a default one. */
-@@ -2484,9 +2475,6 @@ int main(int argc, char **argv)
+@@ -2489,11 +2480,6 @@ int main(int argc, char **argv)
  	shiftaltup = get_keycode("kUP4", SHIFT_ALT_UP);
  	shiftaltdown = get_keycode("kDN4", SHIFT_ALT_DOWN);
  
+-#ifdef HAVE_DEFINE_KEY
 -	/* Tell ncurses to transform bracketed-paste sequences into keycodes. */
 -	define_key("\e[200~", START_OF_PASTE);
 -	define_key("\e[201~", END_OF_PASTE);
- #endif
- 	mousefocusin = get_keycode("kxIN", FOCUS_IN);
- 	mousefocusout = get_keycode("kxOUT", FOCUS_OUT);
+-#endif
+ #endif /* NANO_TINY */
+ 
+ #if (NCURSES_VERSION_PATCH > 20230506) && (NCURSES_VERSION_PATCH < 20231028)
 diff --git a/src/winio.c b/src/winio.c
 index f0bfffe..a4e91ce 100644
 --- a/src/winio.c
 +++ b/src/winio.c
-@@ -1531,11 +1531,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
+@@ -1529,11 +1529,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
  	if (!ISSET(RAW_SEQUENCES))
  		keypad(frame, FALSE);
  
@@ -62,7 +64,7 @@ index f0bfffe..a4e91ce 100644
  
  	linger_after_escape = TRUE;
  
-@@ -1554,11 +1549,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
+@@ -1552,11 +1547,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
  
  	linger_after_escape = FALSE;
  

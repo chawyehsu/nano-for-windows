@@ -1,0 +1,79 @@
+From 68826d8274a1f1e950168b6bafd22c69908c2ea3 Mon Sep 17 00:00:00 2001
+From: Chawye Hsu <su+git@chawyehsu.com>
+Date: Thu, 16 Apr 2026 00:35:54 +0800
+Subject: [PATCH 02/18] win32: drop bracketed paste mode escape sequences
+
+Signed-off-by: Chawye Hsu <su+git@chawyehsu.com>
+---
+ src/nano.c  | 12 ------------
+ src/winio.c | 10 ----------
+ 2 files changed, 22 deletions(-)
+
+diff --git a/src/nano.c b/src/nano.c
+index 129ff78..59f2074 100644
+--- a/src/nano.c
++++ b/src/nano.c
+@@ -230,10 +230,6 @@ void restore_terminal(void)
+ {
+ 	curs_set(1);
+ 	endwin();
+-#ifndef NANO_TINY
+-	printf("\x1B[?2004l");
+-	fflush(stdout);
+-#endif
+ 	tcsetattr(STDIN_FILENO, TCSANOW, &original_state);
+ }
+ 
+@@ -1230,11 +1226,6 @@ void terminal_init(void)
+ 
+ 	disable_kb_interrupt();
+ 
+-#ifndef NANO_TINY
+-	/* Tell the terminal to enable bracketed pastes. */
+-	printf("\x1B[?2004h");
+-	fflush(stdout);
+-#endif
+ }
+ 
+ /* Ask ncurses for a keycode, or assign a default one. */
+@@ -2484,9 +2475,6 @@ int main(int argc, char **argv)
+ 	shiftaltup = get_keycode("kUP4", SHIFT_ALT_UP);
+ 	shiftaltdown = get_keycode("kDN4", SHIFT_ALT_DOWN);
+ 
+-	/* Tell ncurses to transform bracketed-paste sequences into keycodes. */
+-	define_key("\e[200~", START_OF_PASTE);
+-	define_key("\e[201~", END_OF_PASTE);
+ #endif
+ 	mousefocusin = get_keycode("kxIN", FOCUS_IN);
+ 	mousefocusout = get_keycode("kxOUT", FOCUS_OUT);
+diff --git a/src/winio.c b/src/winio.c
+index f0bfffe..a4e91ce 100644
+--- a/src/winio.c
++++ b/src/winio.c
+@@ -1531,11 +1531,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
+ 	if (!ISSET(RAW_SEQUENCES))
+ 		keypad(frame, FALSE);
+ 
+-#ifndef NANO_TINY
+-	/* Turn bracketed-paste mode off. */
+-	printf("\x1B[?2004l");
+-	fflush(stdout);
+-#endif
+ 
+ 	linger_after_escape = TRUE;
+ 
+@@ -1554,11 +1549,6 @@ char *get_verbatim_kbinput(WINDOW *frame, size_t *count)
+ 
+ 	linger_after_escape = FALSE;
+ 
+-#ifndef NANO_TINY
+-	/* Turn bracketed-paste mode back on. */
+-	printf("\x1B[?2004h");
+-	fflush(stdout);
+-#endif
+ 
+ 	/* Turn flow control characters back on if necessary and turn the
+ 	 * keypad back on if necessary now that we're done. */
+-- 
+2.54.0.windows.1
+

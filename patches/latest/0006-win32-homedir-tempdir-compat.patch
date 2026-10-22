@@ -19,10 +19,10 @@ index 4f1b46c..cb4cde7 100644
  {
 -	const char *env_dir = getenv("TMPDIR");
 +	const char *env_dir = getenv("TEMP");
- 	char *tempdir = NULL, *tempfile_name = NULL;
+ 	char *tempdir = NULL;
+ 	char *tempfile_name;
  	char *extension;
- 	int descriptor;
-@@ -1434,7 +1434,7 @@ char *safe_tempfile(FILE **stream)
+@@ -1435,7 +1435,7 @@ char *safe_tempfile(FILE **stream)
  		tempdir = check_writable_directory(P_tmpdir);
  
  	if (tempdir == NULL)
