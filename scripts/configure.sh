@@ -29,7 +29,7 @@ if [[ "${ostype}" =~ MSYS_NT-* ]]; then
         --host="${HOST}" \
         --disable-dependency-tracking \
         --enable-utf8 \
-        --disable-{nls,browser}
+        --disable-nls
 else
     ./configure \
         --disable-dependency-tracking \
